@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="gold">#FFD700</color>
+    <color name="stat_pink">#DA1884</color>
+    <color name="stat_dark_blue">#00008B</color>
+    <color name="stat_dark_teal">#25383C</color>
+    <color name="stat_green">#006400</color>
+    <color name="stat_gray">#B6B6B6</color>
+    <color name="stat_red">#C11B17</color>
+
+</resources>
