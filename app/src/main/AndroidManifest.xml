@@ -13,7 +13,7 @@
         android:theme="@style/Theme.SuperUltima">
 
         <activity
-            android:name=".AirplaneCardActivity"
+            android:name=".AirplanesCardActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

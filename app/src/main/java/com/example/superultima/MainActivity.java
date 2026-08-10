@@ -20,10 +20,13 @@ public class MainActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
-        MaterialCardView airplanesPack1 = findViewById(R.id.airplanesPack1);
+        MaterialCardView airplanesPack1 =
+                findViewById(R.id.airplanesPack1);
 
         airplanesPack1.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, AirplaneCardActivity.class);
+
+            Intent intent =
+                    new Intent(MainActivity.this, AirplanesCardActivity.class);
             startActivity(intent);
         });
 
