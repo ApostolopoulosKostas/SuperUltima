@@ -43,7 +43,7 @@ public class AirplanesCardActivity extends AppCompatActivity {
 
 
 
-        setContentView(R.layout.activity_airplanes1);
+        setContentView(R.layout.card1);
 
         homeButton = findViewById(R.id.homeButton);
         homeButton.setOnClickListener(v -> finish());
