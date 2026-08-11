@@ -21,6 +21,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="40dp"/>
 
+
+
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/airplanesPack1"
         android:layout_width="110dp"
@@ -59,6 +61,8 @@
         </LinearLayout>
 
 
+
+
     </com.google.android.material.card.MaterialCardView>
 
     <TextView
@@ -75,6 +79,56 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@id/airplanesPack1"
         app:layout_constraintTop_toBottomOf="@id/airplanesPack1" />
+
+
+    <LinearLayout
+        android:id="@+id/bottomToolbar"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:background="#FFD700"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <Button
+            android:id="@+id/playButton"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="5dp"
+            android:text="PLAY"
+            android:textColor="#C11B17"
+            android:textStyle="bold"
+            android:backgroundTint="#252A31"/>
+
+
+        <TextView
+            android:id="@+id/welcomeText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="50dp"
+            android:text="WELCOME"
+            android:textColor="@color/black"
+            android:fontFamily="@font/homevideoboldr90dv"
+            android:textSize="30sp"
+            android:textStyle="bold"
+
+
+            >
+        </TextView>
+        <Button
+            android:id="@+id/rulesButton"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="40dp"
+            android:text="Rules"
+            android:textColor="#FF000000"
+            android:textStyle="bold"
+            android:backgroundTint="#252A31"/>
+
+
+    </LinearLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
