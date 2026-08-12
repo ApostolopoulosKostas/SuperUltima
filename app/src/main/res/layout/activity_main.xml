@@ -98,7 +98,7 @@
             android:layout_height="match_parent"
             android:layout_marginStart="5dp"
             android:text="PLAY"
-            android:textColor="#C11B17"
+            android:textColor="#F8C11B17"
             android:textStyle="bold"
             android:backgroundTint="#252A31"/>
 

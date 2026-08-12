@@ -12,7 +12,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.card.MaterialCardView;
-import android.widget.Button;
+
 
 
 public class MainActivity extends AppCompatActivity {
@@ -60,9 +60,9 @@ public class MainActivity extends AppCompatActivity {
                     new String[]{"CREATE GAME", "JOIN GAME"},
                     (dialog, which) -> {
                         if (which == 0) {
-                            //CREATE GAME
+                            createGAME() ;
                         } else {
-                            //JOIN GAME
+                            joinGAME();
                         }
 
                     });
@@ -70,5 +70,25 @@ public class MainActivity extends AppCompatActivity {
             builder.show();
         });
 
+    }
+    private void createGAME(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("CREATE GAME");
+        builder.setMessage("Host");
+        builder.setPositiveButton("Start Hosting",(dialog,which)->{
+           //connections will go here
+        });
+        builder.setNegativeButton("Cancel",null);
+        builder.show();
+    }
+    private void joinGAME (){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("JOIN GAME");
+        builder.setMessage("SEARCH FOR AVAILABLE GAMES");
+        builder.setPositiveButton("SEARCH",(dialog,which)->{
+            //discovery will go here
+        });
+        builder.setNegativeButton("Cancel",null);
+        builder.show();
     }
 }
