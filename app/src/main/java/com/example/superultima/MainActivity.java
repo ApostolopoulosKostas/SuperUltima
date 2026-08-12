@@ -60,9 +60,9 @@ public class MainActivity extends AppCompatActivity {
                     new String[]{"CREATE GAME", "JOIN GAME"},
                     (dialog, which) -> {
                         if (which == 0) {
-                            createGAME() ;
+                            createGame() ;
                         } else {
-                            joinGAME();
+                            joinGame();
                         }
 
                     });
@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
-    private void createGAME(){
+    private void createGame(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("CREATE GAME");
         builder.setMessage("Host");
@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
         builder.setNegativeButton("Cancel",null);
         builder.show();
     }
-    private void joinGAME (){
+    private void joinGame(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("JOIN GAME");
         builder.setMessage("SEARCH FOR AVAILABLE GAMES");
