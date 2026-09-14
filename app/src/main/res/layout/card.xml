@@ -8,8 +8,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#10131A"
-    tools:context=".AirplanesCardActivity">
-
+    tools:context=".CardActivity">
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/cardTemplate"
@@ -25,16 +24,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="#C0C0C0">
 
-
-            <!-- ========================= -->
             <!-- HEADER -->
-            <!-- ========================= -->
 
             <LinearLayout
                 android:id="@+id/headerBar"
@@ -48,8 +43,6 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent">
-
-
 
                 <!-- CARD CODE -->
 
@@ -72,8 +65,7 @@
 
                 </FrameLayout>
 
-
-                <!-- TITLE -->
+                <!-- CARD NAME + TYPE -->
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -84,7 +76,7 @@
                     android:paddingStart="12dp">
 
                     <TextView
-                        android:id="@+id/airplaneName"
+                        android:id="@+id/cardName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text=""
@@ -94,7 +86,7 @@
                         android:fontFamily="@font/pixeboy"/>
 
                     <TextView
-                        android:id="@+id/airplaneType"
+                        android:id="@+id/cardType"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text=""
@@ -108,9 +100,7 @@
             </LinearLayout>
 
 
-            <!-- ========================= -->
-            <!-- AIRPLANE IMAGE + BUTTONS -->
-            <!-- ========================= -->
+            <!-- IMAGE + BUTTONS -->
 
             <FrameLayout
                 android:id="@+id/imageFrame"
@@ -123,18 +113,17 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent">
 
-
-                <!-- AIRPLANE IMAGE -->
+                <!-- CARD IMAGE -->
 
                 <ImageView
-                    android:id="@+id/airplaneImage"
+                    android:id="@+id/cardImage"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="fitXY"
-                    android:src="@android:color/transparent"/>
-                <!-- ========================= -->
-                <!-- PREVIOUS BUTTON -->
-                <!-- ========================= -->
+                    android:src="@null"/>
+
+                <!-- PREVIOUS -->
+
                 <Button
                     android:id="@+id/prevButton"
                     android:layout_width="90dp"
@@ -148,7 +137,9 @@
                     android:textStyle="bold"
                     android:backgroundTint="#333333"
                     android:fontFamily="@font/pixeboy"/>
+
                 <!-- HOME -->
+
                 <Button
                     android:id="@+id/homeButton"
                     android:layout_width="90dp"
@@ -161,10 +152,10 @@
                     android:text="HOME"
                     android:textColor="#FFFFFF"
                     android:textSize="12sp"
-                    android:textStyle="bold" />
-                <!-- ========================= -->
-                <!-- NEXT BUTTON -->
-                <!-- ========================= -->
+                    android:textStyle="bold"/>
+
+                <!-- NEXT -->
+
                 <Button
                     android:id="@+id/nextButton"
                     android:layout_width="90dp"
@@ -182,9 +173,7 @@
             </FrameLayout>
 
 
-            <!-- ========================= -->
             <!-- STATISTICS -->
-            <!-- ========================= -->
 
             <LinearLayout
                 android:id="@+id/statsContainer"
@@ -197,9 +186,7 @@
                 app:layout_constraintEnd_toEndOf="parent">
 
 
-                <!-- ========================= -->
                 <!-- ROW 1 -->
-                <!-- ========================= -->
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -207,8 +194,7 @@
                     android:orientation="horizontal"
                     android:layout_marginBottom="8dp">
 
-
-                    <!-- SPEED -->
+                    <!-- STAT 1 -->
 
                     <com.google.android.material.card.MaterialCardView
                         android:layout_width="0dp"
@@ -225,17 +211,17 @@
                             android:gravity="center">
 
                             <TextView
-                                android:id="@+id/speedLabel"
+                                android:id="@+id/label1"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="SPEED"
+                                android:text=""
                                 android:textColor="#000000"
                                 android:textSize="24sp"
                                 android:textStyle="bold"
                                 android:fontFamily="@font/homevideoboldr90dv"/>
 
                             <TextView
-                                android:id="@+id/speedValue"
+                                android:id="@+id/value1"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text=""
@@ -248,7 +234,7 @@
                     </com.google.android.material.card.MaterialCardView>
 
 
-                    <!-- AUTONOMY -->
+                    <!-- STAT 2 -->
 
                     <com.google.android.material.card.MaterialCardView
                         android:layout_width="0dp"
@@ -265,17 +251,17 @@
                             android:gravity="center">
 
                             <TextView
-                                android:id="@+id/autonomyLabel"
+                                android:id="@+id/label2"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="AUTONOMY"
+                                android:text=""
                                 android:textColor="#000000"
                                 android:textSize="24sp"
                                 android:textStyle="bold"
                                 android:fontFamily="@font/homevideoboldr90dv"/>
 
                             <TextView
-                                android:id="@+id/autonomyValue"
+                                android:id="@+id/value2"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text=""
@@ -290,9 +276,7 @@
                 </LinearLayout>
 
 
-                <!-- ========================= -->
                 <!-- ROW 2 -->
-                <!-- ========================= -->
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -300,8 +284,7 @@
                     android:orientation="horizontal"
                     android:layout_marginBottom="8dp">
 
-
-                    <!-- WINGS -->
+                    <!-- STAT 3 -->
 
                     <com.google.android.material.card.MaterialCardView
                         android:layout_width="0dp"
@@ -318,17 +301,17 @@
                             android:gravity="center">
 
                             <TextView
-                                android:id="@+id/wingsLabel"
+                                android:id="@+id/label3"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="WINGS"
+                                android:text=""
                                 android:textColor="#000000"
                                 android:textSize="24sp"
                                 android:textStyle="bold"
                                 android:fontFamily="@font/homevideoboldr90dv"/>
 
                             <TextView
-                                android:id="@+id/wingsValue"
+                                android:id="@+id/value3"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text=""
@@ -341,7 +324,7 @@
                     </com.google.android.material.card.MaterialCardView>
 
 
-                    <!-- LENGTH -->
+                    <!-- STAT 4 -->
 
                     <com.google.android.material.card.MaterialCardView
                         android:layout_width="0dp"
@@ -358,17 +341,17 @@
                             android:gravity="center">
 
                             <TextView
-                                android:id="@+id/lengthLabel"
+                                android:id="@+id/label4"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="LENGTH"
+                                android:text=""
                                 android:textColor="#000000"
                                 android:textSize="24sp"
                                 android:textStyle="bold"
                                 android:fontFamily="@font/homevideoboldr90dv"/>
 
                             <TextView
-                                android:id="@+id/lengthValue"
+                                android:id="@+id/value4"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text=""
@@ -383,17 +366,14 @@
                 </LinearLayout>
 
 
-                <!-- ========================= -->
                 <!-- ROW 3 -->
-                <!-- ========================= -->
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
-
-                    <!-- WEIGHT -->
+                    <!-- STAT 5 -->
 
                     <com.google.android.material.card.MaterialCardView
                         android:layout_width="0dp"
@@ -410,17 +390,17 @@
                             android:gravity="center">
 
                             <TextView
-                                android:id="@+id/weightLabel"
+                                android:id="@+id/label5"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="WEIGHT"
+                                android:text=""
                                 android:textColor="#000000"
                                 android:textSize="24sp"
                                 android:textStyle="bold"
                                 android:fontFamily="@font/homevideoboldr90dv"/>
 
                             <TextView
-                                android:id="@+id/weightValue"
+                                android:id="@+id/value5"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text=""
@@ -433,7 +413,7 @@
                     </com.google.android.material.card.MaterialCardView>
 
 
-                    <!-- MAX HEIGHT -->
+                    <!-- STAT 6 -->
 
                     <com.google.android.material.card.MaterialCardView
                         android:layout_width="0dp"
@@ -450,17 +430,17 @@
                             android:gravity="center">
 
                             <TextView
-                                android:id="@+id/maxHeightLabel"
+                                android:id="@+id/label6"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="MAX HEIGHT"
+                                android:text=""
                                 android:textColor="#000000"
                                 android:textSize="24sp"
                                 android:textStyle="bold"
                                 android:fontFamily="@font/homevideoboldr90dv"/>
 
                             <TextView
-                                android:id="@+id/maxHeightValue"
+                                android:id="@+id/value6"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text=""

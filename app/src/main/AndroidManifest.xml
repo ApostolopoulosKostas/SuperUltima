@@ -24,7 +24,7 @@
         android:theme="@style/Theme.SuperUltima">
 
         <activity
-            android:name=".AirplanesCardActivity"
+            android:name=".CardActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

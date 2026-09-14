@@ -13,44 +13,42 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.card.MaterialCardView;
 
-
-
+/**
+ * Main activity for the SuperUltima application.
+ * Handles the initial screen, pack selection, and starting or joining games.
+ */
 public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
+        // Enable edge-to-edge display for a modern look.
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
-        MaterialCardView airplanesPack1 =
-                findViewById(R.id.airplanesPack1);
-
+        // Setup the Airplanes Pack 1 card click listener to navigate to its card activity.
+        MaterialCardView airplanesPack1 = findViewById(R.id.airplanesPack1);
         airplanesPack1.setOnClickListener(v -> {
-
-            Intent intent =
-                    new Intent(MainActivity.this, AirplanesCardActivity.class);
+            Intent intent = new Intent(MainActivity.this, CardActivity.class);
             startActivity(intent);
         });
 
+        // Handle window insets for edge-to-edge display to prevent UI overlap with system bars.
         ViewCompat.setOnApplyWindowInsetsListener(
                 findViewById(R.id.main),
                 (v, insets) -> {
-
-                    Insets systemBars =
-                            insets.getInsets(WindowInsetsCompat.Type.systemBars());
-
+                    Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
                     v.setPadding(
                             systemBars.left,
                             systemBars.top,
                             systemBars.right,
                             systemBars.bottom
                     );
-
                     return insets;
                 }
         );
+
+        // Setup the Play button to show an options dialog (Create or Join Game).
         Button playButton = findViewById(R.id.playButton);
         playButton.setOnClickListener(v -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
@@ -60,35 +58,41 @@ public class MainActivity extends AppCompatActivity {
                     new String[]{"CREATE GAME", "JOIN GAME"},
                     (dialog, which) -> {
                         if (which == 0) {
-                            createGame() ;
+                            createGame();
                         } else {
                             joinGame();
                         }
-
                     });
             builder.setNegativeButton("Cancel", null);
             builder.show();
         });
-
     }
-    private void createGame(){
+
+    /**
+     * Initiates the process to host a new game session.
+     */
+    private void createGame() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("CREATE GAME");
         builder.setMessage("Host");
-        builder.setPositiveButton("Start Hosting",(dialog,which)->{
-           //connections will go here
+        builder.setPositiveButton("Start Hosting", (dialog, which) -> {
+            // TODO: Implement Nearby Connections hosting logic.
         });
-        builder.setNegativeButton("Cancel",null);
+        builder.setNegativeButton("Cancel", null);
         builder.show();
     }
-    private void joinGame(){
+
+    /**
+     * Initiates the process to search for and join an existing game session.
+     */
+    private void joinGame() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("JOIN GAME");
         builder.setMessage("SEARCH FOR AVAILABLE GAMES");
-        builder.setPositiveButton("SEARCH",(dialog,which)->{
-            //discovery will go here
+        builder.setPositiveButton("SEARCH", (dialog, which) -> {
+            // TODO: Implement Nearby Connections discovery logic.
         });
-        builder.setNegativeButton("Cancel",null);
+        builder.setNegativeButton("Cancel", null);
         builder.show();
     }
 }
