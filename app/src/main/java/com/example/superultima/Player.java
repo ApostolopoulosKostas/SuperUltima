@@ -22,4 +22,14 @@ public class Player {
     public int getCardCount() {
         return cards.size();
     }
+
+
+    public CardInfo getTopCard() {
+        return cards.get(0);
+    }
+
+    public CardInfo removeTopCard() {
+        return cards.remove(0);
+    }
+
 }

@@ -94,35 +94,32 @@
 
         <Button
             android:id="@+id/playButton"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginStart="5dp"
+            android:layout_weight="1"
             android:text="PLAY"
             android:textColor="#F8C11B17"
             android:textStyle="bold"
             android:backgroundTint="#252A31"/>
 
-
         <TextView
             android:id="@+id/welcomeText"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="50dp"
+            android:layout_weight="1"
+            android:gravity="center"
             android:text="WELCOME"
             android:textColor="@color/black"
             android:fontFamily="@font/homevideoboldr90dv"
             android:textSize="30sp"
-            android:textStyle="bold"
+            android:textStyle="bold"/>
 
-
-            >
-        </TextView>
         <Button
             android:id="@+id/rulesButton"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginStart="40dp"
-            android:text="Rules"
+            android:layout_weight="1"
+            android:text="RULES"
             android:textColor="#FF000000"
             android:textStyle="bold"
             android:backgroundTint="#252A31"/>
