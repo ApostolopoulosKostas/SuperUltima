@@ -15,15 +15,13 @@ import com.google.android.gms.nearby.connection.Strategy;
 
 public class OfflineGameConnection {
 
-    private final Context context;
+
     private final ConnectionsClient connectionsClient;
 
     private ConnectionLifecycleCallback connectionLifecycleCallback;
     private PayloadCallback payloadCallback;
 
     public OfflineGameConnection(Context context) {
-
-        this.context = context;
 
         connectionsClient = Nearby.getConnectionsClient(context);
 

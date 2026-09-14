@@ -1,6 +1,6 @@
 package com.example.superultima;
 
-public class CardInfo {
+public class CardInfo implements java.io.Serializable {
 
     String code;
     String name;
@@ -41,7 +41,7 @@ public class CardInfo {
                 new Statistic(label, value, unit);
     }
 
-    static class Statistic {
+    static class Statistic implements java.io.Serializable {
 
         String label;
         double value;

@@ -28,8 +28,14 @@ public class Player {
         return cards.get(0);
     }
 
+    //after a round,
+    // we can take each player's played card and eventually give those cards to the winner
     public CardInfo removeTopCard() {
         return cards.remove(0);
+    }
+    //puts a card at the bottom of players pile
+    public void addCardToBottom(CardInfo card) {
+        cards.add(card);
     }
 
 }

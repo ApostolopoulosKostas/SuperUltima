@@ -7,5 +7,4 @@ public class CarsDeck {
 
     private final List<CardInfo> cards2 = new ArrayList<>();
 
-
 }

@@ -197,6 +197,7 @@
                     <!-- STAT 1 -->
 
                     <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/statCard1"
                         android:layout_width="0dp"
                         android:layout_height="74dp"
                         android:layout_weight="1"
@@ -238,6 +239,7 @@
 
                     <com.google.android.material.card.MaterialCardView
                         android:layout_width="0dp"
+                        android:id="@+id/statCard2"
                         android:layout_height="74dp"
                         android:layout_weight="1"
                         android:layout_marginStart="6dp"
@@ -288,6 +290,7 @@
 
                     <com.google.android.material.card.MaterialCardView
                         android:layout_width="0dp"
+                        android:id="@+id/statCard3"
                         android:layout_height="74dp"
                         android:layout_weight="1"
                         android:layout_marginEnd="6dp"
@@ -328,6 +331,7 @@
 
                     <com.google.android.material.card.MaterialCardView
                         android:layout_width="0dp"
+                        android:id="@+id/statCard4"
                         android:layout_height="74dp"
                         android:layout_weight="1"
                         android:layout_marginStart="6dp"
@@ -377,6 +381,7 @@
 
                     <com.google.android.material.card.MaterialCardView
                         android:layout_width="0dp"
+                        android:id="@+id/statCard5"
                         android:layout_height="74dp"
                         android:layout_weight="1"
                         android:layout_marginEnd="6dp"
@@ -417,6 +422,7 @@
 
                     <com.google.android.material.card.MaterialCardView
                         android:layout_width="0dp"
+                        android:id="@+id/statCard6"
                         android:layout_height="74dp"
                         android:layout_weight="1"
                         android:layout_marginStart="6dp"

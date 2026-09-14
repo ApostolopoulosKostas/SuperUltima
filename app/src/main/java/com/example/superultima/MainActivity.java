@@ -10,6 +10,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.google.android.material.card.MaterialCardView;
 
@@ -19,6 +21,8 @@ import com.google.android.material.card.MaterialCardView;
  */
 public class MainActivity extends AppCompatActivity {
 
+    private List<CardInfo> selectedDeck;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,9 +30,16 @@ public class MainActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
+
+
         // Setup the Airplanes Pack 1 card click listener to navigate to its card activity.
         MaterialCardView airplanesPack1 = findViewById(R.id.airplanesPack1);
+
+        //only for viewing the deck/cards.
+
+        //AIRPLANES
         airplanesPack1.setOnClickListener(v -> {
+            selectedDeck = new AirplanesDeck().getCards();
             Intent intent = new Intent(MainActivity.this, CardActivity.class);
             startActivity(intent);
         });
@@ -76,7 +87,11 @@ public class MainActivity extends AppCompatActivity {
         builder.setTitle("CREATE GAME");
         builder.setMessage("Host");
         builder.setPositiveButton("Start Hosting", (dialog, which) -> {
-            // TODO: Implement Nearby Connections hosting logic.
+            Intent intent = new Intent(MainActivity.this, GameActivity.class);
+
+            intent.putExtra("deck", new ArrayList<>(selectedDeck));
+
+            startActivity(intent);
         });
         builder.setNegativeButton("Cancel", null);
         builder.show();
