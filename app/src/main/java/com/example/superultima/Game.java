@@ -25,6 +25,10 @@ public class Game {
      */
     public Game(int numberOfPlayers, List<CardInfo> deck) {
 
+        if (numberOfPlayers < 2 || numberOfPlayers > 4) {
+            throw new IllegalArgumentException("SuperUltima supports 2 to 4 players.");
+        }
+
         // Create the players
         for (int i = 0; i < numberOfPlayers; i++) {
             players.add(new Player());
