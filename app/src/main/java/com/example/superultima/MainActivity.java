@@ -1,10 +1,15 @@
-package com.example.superultima;
+ package com.example.superultima;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.widget.Button;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -13,6 +18,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.card.MaterialCardView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -23,17 +29,84 @@ public class MainActivity extends AppCompatActivity {
 
     private AlertDialog waitingDialog;
 
+    /*
+     * 0 = nothing
+     * 1 = create game
+     * 2 = join game
+     */
+    private int pendingAction = 0;
+
+    private ActivityResultLauncher<String[]> nearbyPermissionLauncher;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
 
         EdgeToEdge.enable(this);
-
         setContentView(R.layout.activity_main);
 
+        // ---------------------------------------------------------
+        // NEARBY DEVICES PERMISSION
+        // ---------------------------------------------------------
+
+        nearbyPermissionLauncher =
+                registerForActivityResult(
+                        new ActivityResultContracts.RequestMultiplePermissions(),
+                        result -> {
+
+                            boolean bluetoothScan =
+                                    Boolean.TRUE.equals(
+                                            result.get(
+                                                    Manifest.permission.BLUETOOTH_SCAN
+                                            )
+                                    );
+
+                            boolean bluetoothConnect =
+                                    Boolean.TRUE.equals(
+                                            result.get(
+                                                    Manifest.permission.BLUETOOTH_CONNECT
+                                            )
+                                    );
+
+                            boolean bluetoothAdvertise =
+                                    Boolean.TRUE.equals(
+                                            result.get(
+                                                    Manifest.permission.BLUETOOTH_ADVERTISE
+                                            )
+                                    );
+
+                            if (bluetoothScan &&
+                                    bluetoothConnect &&
+                                    bluetoothAdvertise) {
+
+                                if (pendingAction == 1) {
+
+                                    pendingAction = 0;
+                                    createGame();
+
+                                } else if (pendingAction == 2) {
+
+                                    pendingAction = 0;
+                                    joinGame();
+                                }
+
+                            } else {
+
+                                pendingAction = 0;
+
+                                showMessage(
+                                        "PERMISSION REQUIRED",
+                                        "Nearby devices permission is required to create or join a game."
+                                );
+                            }
+                        }
+                );
+
+        // ---------------------------------------------------------
         // AIRPLANES PACK
         // Only for viewing the cards.
+        // ---------------------------------------------------------
+
         MaterialCardView airplanesPack1 =
                 findViewById(R.id.airplanesPack1);
 
@@ -51,7 +124,10 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        // SYSTEM BAR INSETS
+        // ---------------------------------------------------------
+        // WINDOW INSETS
+        // ---------------------------------------------------------
+
         ViewCompat.setOnApplyWindowInsetsListener(
                 findViewById(R.id.main),
                 (v, insets) -> {
@@ -72,7 +148,10 @@ public class MainActivity extends AppCompatActivity {
                 }
         );
 
+        // ---------------------------------------------------------
         // PLAY
+        // ---------------------------------------------------------
+
         Button playButton =
                 findViewById(R.id.playButton);
 
@@ -94,11 +173,11 @@ public class MainActivity extends AppCompatActivity {
 
                         if (which == 0) {
 
-                            createGame();
+                            createGameWithPermission();
 
                         } else {
 
-                            joinGame();
+                            joinGameWithPermission();
                         }
                     }
             );
@@ -110,6 +189,85 @@ public class MainActivity extends AppCompatActivity {
 
             builder.show();
         });
+    }
+
+    // ---------------------------------------------------------
+    // CREATE GAME - CHECK PERMISSION
+    // ---------------------------------------------------------
+
+    private void createGameWithPermission() {
+
+        if (hasNearbyPermissions()) {
+
+            createGame();
+
+        } else {
+
+            pendingAction = 1;
+            requestNearbyPermissions();
+        }
+    }
+
+    // ---------------------------------------------------------
+    // JOIN GAME - CHECK PERMISSION
+    // ---------------------------------------------------------
+
+    private void joinGameWithPermission() {
+
+        if (hasNearbyPermissions()) {
+
+            joinGame();
+
+        } else {
+
+            pendingAction = 2;
+            requestNearbyPermissions();
+        }
+    }
+
+    // ---------------------------------------------------------
+    // CHECK NEARBY PERMISSIONS
+    // ---------------------------------------------------------
+
+    private boolean hasNearbyPermissions() {
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
+            return true;
+        }
+
+        return checkSelfPermission(
+                Manifest.permission.BLUETOOTH_SCAN
+        ) == PackageManager.PERMISSION_GRANTED
+
+                &&
+
+                checkSelfPermission(
+                        Manifest.permission.BLUETOOTH_CONNECT
+                ) == PackageManager.PERMISSION_GRANTED
+
+                &&
+
+                checkSelfPermission(
+                        Manifest.permission.BLUETOOTH_ADVERTISE
+                ) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    // ---------------------------------------------------------
+    // REQUEST NEARBY PERMISSIONS
+    // ---------------------------------------------------------
+
+    private void requestNearbyPermissions() {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+
+            nearbyPermissionLauncher.launch(
+                    new String[]{
+                            Manifest.permission.BLUETOOTH_SCAN,
+                            Manifest.permission.BLUETOOTH_CONNECT,
+                            Manifest.permission.BLUETOOTH_ADVERTISE
+                    }
+            );
+        }
     }
 
     // ---------------------------------------------------------
@@ -150,7 +308,7 @@ public class MainActivity extends AppCompatActivity {
                             public void onGameStarted(
                                     String deckName) {
                                 // Host does not receive
-                                // the start message.
+                                // the start command.
                             }
 
                             @Override
@@ -252,7 +410,7 @@ public class MainActivity extends AppCompatActivity {
 
         connection.stopAdvertising();
 
-        // Tell the connected players to start.
+        // Tell connected players to start.
         connection.startGame(deckName);
 
         // Start the host locally.
@@ -274,7 +432,7 @@ public class MainActivity extends AppCompatActivity {
                             public void onPlayerCountChanged(
                                     int playerCount) {
 
-                                // Joiner doesn't control
+                                // Joiner does not control
                                 // the player count.
                             }
 
@@ -354,7 +512,7 @@ public class MainActivity extends AppCompatActivity {
 
         intent.putExtra(
                 "deck",
-                new java.util.ArrayList<>(deck)
+                new ArrayList<>(deck)
         );
 
         startActivity(intent);
