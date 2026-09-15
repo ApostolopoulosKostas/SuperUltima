@@ -5,6 +5,7 @@
     <uses-permission
         android:name="android.permission.BLUETOOTH_SCAN"
         android:usesPermissionFlags="neverForLocation" />
+
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -19,21 +20,35 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SuperUltima">
+
+        <activity
+            android:name=".GameLobbyActivity"
+            android:exported="false" />
+
         <activity
             android:name=".GameActivity"
             android:exported="false" />
+
         <activity
             android:name=".CardActivity"
             android:exported="false" />
+
+        <activity
+            android:name=".DeckSelectionActivity"
+            android:exported="false" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true">
+
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
+
     </application>
 
 </manifest>
