@@ -83,18 +83,11 @@ public class MainActivity extends AppCompatActivity {
      * Initiates the process to host a new game session.
      */
     private void createGame() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("CREATE GAME");
-        builder.setMessage("Host");
-        builder.setPositiveButton("Start Hosting", (dialog, which) -> {
-            Intent intent = new Intent(MainActivity.this, GameActivity.class);
 
-            intent.putExtra("deck", new ArrayList<>(selectedDeck));
+        OfflineGameConnection connection =
+                new OfflineGameConnection(this);
 
-            startActivity(intent);
-        });
-        builder.setNegativeButton("Cancel", null);
-        builder.show();
+        connection.startAdvertising();
     }
 
     /**
