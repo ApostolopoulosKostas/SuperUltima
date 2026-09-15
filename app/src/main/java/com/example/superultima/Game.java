@@ -14,8 +14,9 @@ public class Game {
      * The list of players currently in the game.
      */
     private final List<Player> players = new ArrayList<>();
-
     private int currentPlayer;
+    private boolean firstRound = true;
+    private final List<CardInfo> leftoverCards = new ArrayList<>();
 
     /**
      * Constructs a new Game with a specified number of players.
@@ -48,20 +49,28 @@ public class Game {
         return players.get(currentPlayer);
     }
 
+    // Deal the cards to each player
     private void dealCards(List<CardInfo> deck) {
 
-        int playerIndex = 0;
+        int cardsPerPlayer = deck.size() / players.size();// Calculate the number of cards per player
 
-        for (CardInfo card : deck) {
+        int cardIndex = 0;// Initialize the card index
 
-            players.get(playerIndex).addCard(card);
+        for (Player player : players) {
 
-            playerIndex++;
+            for (int i = 0; i < cardsPerPlayer; i++) {
 
-            if (playerIndex >= players.size()) {
-                playerIndex = 0;
+                player.addCard(deck.get(cardIndex)); // Deal a card to the player
+                cardIndex++;// Move to the next card in the deck
             }
         }
+
+        while (cardIndex < deck.size()) {
+
+            leftoverCards.add(deck.get(cardIndex));
+            cardIndex++;
+        }
+
     }
 
     public List<Player> getPlayers() {
@@ -69,12 +78,14 @@ public class Game {
     }
 
     public void nextPlayer() {
+        do {
+            currentPlayer++;
 
-        currentPlayer++;
+            if (currentPlayer >= players.size()) {
+                currentPlayer = 0;
+            }
 
-        if (currentPlayer >= players.size()) {
-            currentPlayer = 0;
-        }
+        } while (players.get(currentPlayer).getCardCount() == 0);
     }
 
     public CardInfo.Statistic getCurrentStatistic(int position) {
@@ -85,9 +96,21 @@ public class Game {
     // The winner has the highest value.
     public int findWinner(int statisticPosition) {
 
-        int winner = 0;
+        int winner = -1;
 
-        for (int i = 1; i < players.size(); i++) {
+        for (int i = 0; i < players.size(); i++) {
+
+            if (players.get(i).getCardCount() > 0) {
+                winner = i;
+                break;
+            }
+        }
+
+        for (int i = 0; i < players.size(); i++) {
+
+            if (i == winner || players.get(i).getCardCount() == 0) {
+                continue;
+            }
 
             CardInfo currentCard =
                     players.get(i).getTopCard();
@@ -125,6 +148,9 @@ public class Game {
         return winner;
     }
 
+
+
+
     // Collects the top card from every player
     // and gives them to the winner.
     public void collectCards(int winnerIndex) {
@@ -133,6 +159,9 @@ public class Game {
                 players.get(winnerIndex);
 
         for (Player player : players) {
+            if (player.getCardCount() == 0) {
+                continue;
+            }
 
             CardInfo card =
                     player.removeTopCard();
@@ -144,7 +173,34 @@ public class Game {
     // The winner becomes the current player.
     public void setCurrentPlayer(int playerIndex) {
         currentPlayer = playerIndex;
+
+
     }
+    public boolean isGameOver() {
+
+        int playersWithCards = 0;
+
+        for (Player player : players) {
+
+            if (player.getCardCount() > 0) {
+                playersWithCards++;
+            }
+        }
+
+        return playersWithCards == 1;
+    }
+    public int getWinner() {
+
+        for (int i = 0; i < players.size(); i++) {
+
+            if (players.get(i).getCardCount() > 0) {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
 
     public int playRound(int statisticPosition) {
 
@@ -153,8 +209,27 @@ public class Game {
 
         collectCards(winner);
 
+        if (firstRound) {
+            players.get(winner).getCards().addAll(leftoverCards);
+            leftoverCards.clear();
+            firstRound = false;
+        }
         setCurrentPlayer(winner);
 
         return winner;
     }
+    public int getPlayerQuartets(int playerIndex) {
+        return players.get(playerIndex).countQuartets();
+    }
+    public int[] getAllQuartets() {
+
+        int[] quartets = new int[players.size()];
+
+        for (int i = 0; i < players.size(); i++) {
+            quartets[i] = players.get(i).countQuartets();
+        }
+
+        return quartets;
+    }
+
 }

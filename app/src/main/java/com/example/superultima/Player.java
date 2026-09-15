@@ -36,6 +36,31 @@ public class Player {
     //puts a card at the bottom of players pile
     public void addCardToBottom(CardInfo card) {
         cards.add(card);
+
+
+
+    }
+    public int countQuartets() {
+
+        int quartets = 0;
+
+        for (char letter = 'A'; letter <= 'Z'; letter++) {
+
+            int count = 0;
+
+            for (CardInfo card : cards) {
+
+                if (card.letter == letter) {
+                    count++;
+                }
+            }
+
+            if (count == 4) {
+                quartets++;
+            }
+        }
+
+        return quartets;
     }
 
 }

@@ -3,6 +3,7 @@ package com.example.superultima;
 import android.os.Bundle;
 
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.card.MaterialCardView;
 import java.util.List;
@@ -17,7 +18,7 @@ public class GameActivity extends AppCompatActivity {
     private Game game;
     private List<CardInfo> deck;
 
-
+    // Initialize the game and display the first card
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,25 +47,96 @@ public class GameActivity extends AppCompatActivity {
 
         statCard1.setOnClickListener(v -> {
             game.playRound(0);
+            displayCurrentCard();
+            if (game.isGameOver()) {
 
+                disableStatCards();
+
+                int winner = game.getWinner();
+
+                new AlertDialog.Builder(this)
+                        .setTitle("GAME OVER")
+                        .setMessage("Player " + (winner + 1) + " wins!")
+                        .setPositiveButton("OK", null)
+                        .show();
+            }
         });
         statCard2.setOnClickListener(v -> {
+            game.playRound(1);
+            displayCurrentCard();
+            if (game.isGameOver()) {
+
+                disableStatCards();
+
+                int winner = game.getWinner();
+                new AlertDialog.Builder(this)
+                        .setTitle("GAME OVER")
+                        .setMessage("Player " + (winner + 1) + " wins!")
+                        .setPositiveButton("OK", null)
+                        .show();
+            }
 
         });
         statCard3.setOnClickListener(v -> {
+            game.playRound(2);
+            displayCurrentCard();
+            if (game.isGameOver()) {
 
+                disableStatCards();
+
+                int winner = game.getWinner();
+                new AlertDialog.Builder(this)
+                        .setTitle("GAME OVER")
+                        .setMessage("Player " + (winner + 1) + " wins!")
+                        .setPositiveButton("OK", null)
+                        .show();
+            }
         });
         statCard4.setOnClickListener(v -> {
+            game.playRound(3);
+            displayCurrentCard();
+            if (game.isGameOver()) {
 
+                disableStatCards();
+
+                int winner = game.getWinner();
+                new AlertDialog.Builder(this)
+                        .setTitle("GAME OVER")
+                        .setMessage("Player " + (winner + 1) + " wins!")
+                        .setPositiveButton("OK", null)
+                        .show();
+            }
         });
         statCard5.setOnClickListener(v -> {
+            game.playRound(4);
+            displayCurrentCard();
+            if (game.isGameOver()) {
 
+                disableStatCards();
+
+                int winner = game.getWinner();
+                new AlertDialog.Builder(this)
+                        .setTitle("GAME OVER")
+                        .setMessage("Player " + (winner + 1) + " wins!")
+                        .setPositiveButton("OK", null)
+                        .show();
+            }
         });
         statCard6.setOnClickListener(v -> {
+            game.playRound(5);
+            displayCurrentCard();
+            if (game.isGameOver()) {
 
+                disableStatCards();
+
+                int winner = game.getWinner();
+                new AlertDialog.Builder(this)
+                        .setTitle("GAME OVER")
+                        .setMessage("Player " + (winner + 1) + " wins!")
+                        .setPositiveButton("OK", null)
+                        .show();
+            }
         });
-
-
     }
     // Helper method to format the value based on its type
     private String formatValue(double value) {
@@ -126,6 +198,15 @@ public class GameActivity extends AppCompatActivity {
         label6.setText(statistic6.label);
         TextView value6 = findViewById(R.id.value6);
         value6.setText(formatValue(statistic6.value));
+    }
+      // Disable the statistics after the game is over
+    private void disableStatCards() {
+        findViewById(R.id.statCard1).setEnabled(false);
+        findViewById(R.id.statCard2).setEnabled(false);
+        findViewById(R.id.statCard3).setEnabled(false);
+        findViewById(R.id.statCard4).setEnabled(false);
+        findViewById(R.id.statCard5).setEnabled(false);
+        findViewById(R.id.statCard6).setEnabled(false);
     }
 
 
