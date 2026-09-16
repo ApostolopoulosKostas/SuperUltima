@@ -1,17 +1,22 @@
 package com.example.superultima;
 
-public class CardInfo implements java.io.Serializable {
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
-    String code;
-    String name;
-    String type;
-    int image;
+public class CardInfo implements Serializable {
 
-    char letter;
-    int number;
-    boolean superUltima;
+    public String code;
+    public String name;
+    public String type;
+    public int image;
 
-    Statistic[] statistics = new Statistic[6];
+    public char letter;
+    public int number;
+    public boolean superUltima;
+
+    // Kept as a fixed array so legacy card.statistics[i] calls never break
+    public Statistic[] statistics = new Statistic[6];
 
     public CardInfo(
             String code,
@@ -37,17 +42,28 @@ public class CardInfo implements java.io.Serializable {
             double value,
             String unit) {
 
-        statistics[position] =
-                new Statistic(label, value, unit);
+        if (position >= 0 && position < 6) {
+            statistics[position] = new Statistic(label, value, unit);
+        }
     }
 
-    static class Statistic implements java.io.Serializable {
+    // NEW HELPER: Converts the array into a List so GameActivity.getStatistics() works smoothly
+    public List<Statistic> getStatistics() {
+        List<Statistic> list = new ArrayList<>();
+        for (Statistic stat : statistics) {
+            if (stat != null) {
+                list.add(stat);
+            }
+        }
+        return list;
+    }
 
-        String label;
-        double value;
-        String unit;
+    public static class Statistic implements Serializable {
+        public String label;
+        public double value;
+        public String unit;
 
-        Statistic(
+        public Statistic(
                 String label,
                 double value,
                 String unit) {
@@ -58,6 +74,3 @@ public class CardInfo implements java.io.Serializable {
         }
     }
 }
-
-
-

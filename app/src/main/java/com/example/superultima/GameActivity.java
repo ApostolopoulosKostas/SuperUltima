@@ -1,6 +1,7 @@
 package com.example.superultima;
 
 import android.os.Bundle;
+import android.os.Looper;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -11,198 +12,578 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.card.MaterialCardView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GameActivity extends AppCompatActivity {
 
     private Game game;
-    private List<CardInfo> deck;
     private OfflineGameConnection connection;
-    private int localPlayerId = 0; // Host = 0, Guest = 1
+
+    // Host = Player 1
+    // Guest = Player 2
+    private int localPlayerId = 0;
+
     private AlertDialog activeResultDialog;
+
+    private MaterialCardView[] statCards =
+            new MaterialCardView[6];
+
+    private TextView[] labelViews =
+            new TextView[6];
+
+    private TextView[] valueViews =
+            new TextView[6];
+
+    private List<String> currentStatKeys =
+            new ArrayList<>();
+
+    private boolean isBotMode = false;
+
+    private boolean cpuTurnScheduled = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.card);
 
-        deck = (List<CardInfo>) getIntent().getSerializableExtra("deck");
-        connection = OfflineGameConnection.getInstance();
+        isBotMode =
+                getIntent().getBooleanExtra(
+                        "is_bot_mode",
+                        false
+                );
 
-        // Assign player ID: Host is 0, connected Guest is 1
-        if (connection != null && !connection.isHost()) {
+        game =
+                (Game) getIntent().getSerializableExtra(
+                        "game"
+                );
+
+        if (game == null) {
+
+            new AlertDialog.Builder(this)
+                    .setTitle("GAME ERROR")
+                    .setMessage(
+                            "Could not load the game."
+                    )
+                    .setPositiveButton(
+                            "OK",
+                            (dialog, which) -> finish()
+                    )
+                    .setCancelable(false)
+                    .show();
+
+            return;
+        }
+
+        connection =
+                OfflineGameConnection.getInstance();
+
+        // -------------------------------------------------
+        // PLAYER ID
+        // -------------------------------------------------
+
+        if (connection != null
+                && !connection.isHost()
+                && !isBotMode) {
+
             localPlayerId = 1;
+        } else {
+
+            localPlayerId = 0;
         }
 
-        if (connection != null) {
-            connection.setListener(new OfflineGameConnection.ConnectionListener() {
-                @Override
-                public void onMoveReceived(int statIndex) {
-                    runOnUiThread(() -> executeRound(statIndex));
-                }
+        // -------------------------------------------------
+        // CONNECTION LISTENER
+        // -------------------------------------------------
 
-                @Override
-                public void onNextRoundReceived() {
-                    runOnUiThread(() -> advanceToNextRound());
-                }
-            });
+        if (connection != null
+                && !isBotMode) {
+
+            connection.setListener(
+                    new OfflineGameConnection.ConnectionListener() {
+
+                        @Override
+                        public void onMoveReceived(
+                                int statIndex) {
+
+                            runOnUiThread(() ->
+                                    executeRound(statIndex)
+                            );
+                        }
+
+                        @Override
+                        public void onNextRoundReceived() {
+
+                            runOnUiThread(() ->
+                                    advanceToNextRound()
+                            );
+                        }
+                    }
+            );
         }
 
-        int playerCount = (connection != null) ? connection.getPlayerCount() : 2;
-        game = new Game(playerCount, deck);
+        // -------------------------------------------------
+        // HIDE NAVIGATION
+        // -------------------------------------------------
 
-        // Hide card viewer navigation buttons
-        Button prevButton = findViewById(R.id.prevButton);
-        Button homeButton = findViewById(R.id.homeButton);
-        Button nextButton = findViewById(R.id.nextButton);
+        Button prevButton =
+                findViewById(R.id.prevButton);
 
-        if (prevButton != null) prevButton.setVisibility(View.GONE);
-        if (homeButton != null) homeButton.setVisibility(View.GONE);
-        if (nextButton != null) nextButton.setVisibility(View.GONE);
+        Button homeButton =
+                findViewById(R.id.homeButton);
 
-        // Set stat card click listeners
-        MaterialCardView statCard1 = findViewById(R.id.statCard1);
-        MaterialCardView statCard2 = findViewById(R.id.statCard2);
-        MaterialCardView statCard3 = findViewById(R.id.statCard3);
-        MaterialCardView statCard4 = findViewById(R.id.statCard4);
-        MaterialCardView statCard5 = findViewById(R.id.statCard5);
-        MaterialCardView statCard6 = findViewById(R.id.statCard6);
+        Button nextButton =
+                findViewById(R.id.nextButton);
 
-        statCard1.setOnClickListener(v -> selectStatistic(0));
-        statCard2.setOnClickListener(v -> selectStatistic(1));
-        statCard3.setOnClickListener(v -> selectStatistic(2));
-        statCard4.setOnClickListener(v -> selectStatistic(3));
-        statCard5.setOnClickListener(v -> selectStatistic(4));
-        statCard6.setOnClickListener(v -> selectStatistic(5));
+        if (prevButton != null) {
+            prevButton.setVisibility(View.GONE);
+        }
+
+        if (homeButton != null) {
+            homeButton.setVisibility(View.GONE);
+        }
+
+        if (nextButton != null) {
+            nextButton.setVisibility(View.GONE);
+        }
+
+        // -------------------------------------------------
+        // STAT UI
+        // -------------------------------------------------
+
+        for (int i = 0; i < 6; i++) {
+
+            int cardId =
+                    getResources().getIdentifier(
+                            "statCard" + (i + 1),
+                            "id",
+                            getPackageName()
+                    );
+
+            int labelId =
+                    getResources().getIdentifier(
+                            "label" + (i + 1),
+                            "id",
+                            getPackageName()
+                    );
+
+            int valueId =
+                    getResources().getIdentifier(
+                            "value" + (i + 1),
+                            "id",
+                            getPackageName()
+                    );
+
+            statCards[i] =
+                    findViewById(cardId);
+
+            labelViews[i] =
+                    findViewById(labelId);
+
+            valueViews[i] =
+                    findViewById(valueId);
+
+            final int index = i;
+
+            if (statCards[i] != null) {
+
+                statCards[i].setClickable(true);
+                statCards[i].setFocusable(true);
+
+                statCards[i].setOnClickListener(
+                        v -> selectStatistic(index)
+                );
+            }
+
+            if (labelViews[i] != null) {
+
+                labelViews[i].setOnClickListener(
+                        v -> selectStatistic(index)
+                );
+            }
+
+            if (valueViews[i] != null) {
+
+                valueViews[i].setOnClickListener(
+                        v -> selectStatistic(index)
+                );
+            }
+        }
 
         displayCurrentCard();
         updateTurnUI();
     }
 
+    // =================================================
+    // TURN
+    // =================================================
+
     private boolean isMyTurn() {
-        return game.getCurrentPlayerTurn() == localPlayerId;
+
+        return game.getCurrentPlayerTurn()
+                == localPlayerId;
     }
 
     private void updateTurnUI() {
-        if (isMyTurn()) {
-            enableStatCards();
-        } else {
+
+        if (isBotMode
+                && game.getCurrentPlayerTurn() == 1) {
+
             disableStatCards();
+
+            triggerCpuTurn();
+
+            return;
         }
+
+        if (isMyTurn()) {
+
+            enableStatCards();
+
+            return;
+        }
+
+        disableStatCards();
     }
 
-    private void selectStatistic(int statisticPosition) {
-        // Prevent selection if it's not this player's turn
+    // =================================================
+    // SELECT STAT
+    // =================================================
+
+    private void selectStatistic(
+            int statisticPosition) {
+
         if (!isMyTurn()) {
             return;
         }
 
         disableStatCards();
 
-        // Broadcast choice to opponent
-        if (connection != null) {
-            connection.sendMove(statisticPosition);
+        if (connection != null
+                && !isBotMode) {
+
+            connection.sendMove(
+                    statisticPosition
+            );
         }
 
-        executeRound(statisticPosition);
+        executeRound(
+                statisticPosition
+        );
     }
 
-    private void executeRound(int statisticPosition) {
+    // =================================================
+    // EXECUTE ROUND
+    // =================================================
+
+    private void executeRound(
+            int statisticPosition) {
+
         disableStatCards();
 
-        int winnerIndex = game.playRound(statisticPosition);
+        int winnerIndex =
+                game.playRound(
+                        statisticPosition
+                );
 
         if (game.isGameOver()) {
-            int overallWinner = game.getWinner();
-            new AlertDialog.Builder(GameActivity.this)
+
+            int overallWinner =
+                    game.getWinner();
+
+            new AlertDialog.Builder(
+                    GameActivity.this
+            )
                     .setTitle("GAME OVER")
-                    .setMessage("Player " + (overallWinner + 1) + " wins the game!")
+                    .setMessage(
+                            "Player "
+                                    + (overallWinner + 1)
+                                    + " wins the game!"
+                    )
                     .setCancelable(false)
-                    .setPositiveButton("Finish", (d, w) -> finish())
+                    .setPositiveButton(
+                            "FINISH",
+                            (dialog, which) ->
+                                    finish()
+                    )
                     .show();
+
             return;
         }
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(GameActivity.this)
-                .setTitle("ROUND RESULT")
-                .setMessage("Player " + (winnerIndex + 1) + " won this round!")
-                .setCancelable(false);
+        boolean cpuWon =
+                isBotMode
+                        && winnerIndex == 1;
 
-        // Only the player whose turn just ended controls the transition button
-        if (isMyTurn()) {
-            builder.setPositiveButton("Next Turn", (d, w) -> {
-                if (connection != null) {
-                    connection.sendNextRound();
-                }
-                advanceToNextRound();
-            });
-        } else {
-            builder.setMessage("Player " + (winnerIndex + 1) + " won this round!\n\nWaiting for active player to continue...");
+        AlertDialog.Builder builder =
+                new AlertDialog.Builder(
+                        GameActivity.this
+                )
+                        .setTitle("ROUND RESULT")
+                        .setCancelable(false);
+
+        if (cpuWon) {
+
+            builder.setMessage(
+                    "Player "
+                            + (winnerIndex + 1)
+                            + " won this round!\n\n"
+                            + "CPU will continue..."
+            );
+
+            activeResultDialog =
+                    builder.create();
+
+            activeResultDialog.show();
+
+            new android.os.Handler(
+                    Looper.getMainLooper()
+            ).postDelayed(
+                    this::advanceToNextRound,
+                    1500
+            );
+
+            return;
         }
 
-        activeResultDialog = builder.create();
+        builder.setMessage(
+                "Player "
+                        + (winnerIndex + 1)
+                        + " won this round!"
+        );
+
+        builder.setPositiveButton(
+                "NEXT TURN",
+                (dialog, which) -> {
+
+                    if (connection != null
+                            && !isBotMode) {
+
+                        connection.sendNextRound();
+                    }
+
+                    advanceToNextRound();
+                }
+        );
+
+        activeResultDialog =
+                builder.create();
+
         activeResultDialog.show();
     }
 
+    // =================================================
+    // NEXT ROUND
+    // =================================================
+
     private void advanceToNextRound() {
-        if (activeResultDialog != null && activeResultDialog.isShowing()) {
+
+        if (activeResultDialog != null
+                && activeResultDialog.isShowing()) {
+
             activeResultDialog.dismiss();
         }
+
         displayCurrentCard();
         updateTurnUI();
     }
 
-    private String formatValue(double value) {
-        if (value == (long) value) {
-            return String.valueOf((long) value);
+    // =================================================
+    // DISPLAY MY CARD
+    // =================================================
+
+    private void displayCurrentCard() {
+
+        // IMPORTANT:
+        // Each phone displays its OWN player's card.
+        CardInfo currentCard =
+                game.getPlayerCard(
+                        localPlayerId
+                );
+
+        if (currentCard == null) {
+            return;
         }
+
+        TextView cardCode =
+                findViewById(R.id.cardCode);
+
+        if (cardCode != null) {
+            cardCode.setText(
+                    currentCard.code
+            );
+        }
+
+        TextView cardName =
+                findViewById(R.id.cardName);
+
+        if (cardName != null) {
+            cardName.setText(
+                    currentCard.name
+            );
+        }
+
+        TextView cardType =
+                findViewById(R.id.cardType);
+
+        if (cardType != null) {
+            cardType.setText(
+                    currentCard.type
+            );
+        }
+
+        ImageView cardImage =
+                findViewById(R.id.cardImage);
+
+        if (cardImage != null) {
+
+            cardImage.setImageResource(
+                    currentCard.image
+            );
+        }
+
+        currentStatKeys.clear();
+
+        for (int i = 0; i < 6; i++) {
+
+            CardInfo.Statistic stat =
+                    currentCard.statistics[i];
+
+            if (stat == null) {
+
+                if (statCards[i] != null) {
+
+                    statCards[i].setVisibility(
+                            View.GONE
+                    );
+                }
+
+                continue;
+            }
+
+            currentStatKeys.add(
+                    stat.label
+            );
+
+            if (statCards[i] != null) {
+
+                statCards[i].setVisibility(
+                        View.VISIBLE
+                );
+            }
+
+            if (labelViews[i] != null) {
+
+                labelViews[i].setText(
+                        stat.label.toUpperCase()
+                );
+            }
+
+            if (valueViews[i] != null) {
+
+                String text =
+                        formatValue(
+                                stat.value
+                        );
+
+                if (stat.unit != null
+                        && !stat.unit.isEmpty()) {
+
+                    text +=
+                            " " + stat.unit;
+                }
+
+                valueViews[i].setText(
+                        text
+                );
+            }
+        }
+    }
+
+    // =================================================
+    // FORMAT
+    // =================================================
+
+    private String formatValue(
+            Object value) {
+
+        if (value == null) {
+            return "0";
+        }
+
         return String.valueOf(value);
     }
 
-    private void displayCurrentCard() {
-        CardInfo currentCard = game.getCurrentCard();
-        if (currentCard == null) return;
+    // =================================================
+    // BUTTONS
+    // =================================================
 
-        TextView cardCode = findViewById(R.id.cardCode);
-        cardCode.setText(currentCard.code);
+    private void disableStatCards() {
 
-        TextView cardName = findViewById(R.id.cardName);
-        cardName.setText(currentCard.name);
+        for (MaterialCardView card :
+                statCards) {
 
-        TextView cardType = findViewById(R.id.cardType);
-        cardType.setText(currentCard.type);
-
-        ImageView cardImage = findViewById(R.id.cardImage);
-        cardImage.setImageResource(currentCard.image);
-
-        for (int i = 0; i < 6; i++) {
-            CardInfo.Statistic stat = currentCard.statistics[i];
-            int labelId = getResources().getIdentifier("label" + (i + 1), "id", getPackageName());
-            int valueId = getResources().getIdentifier("value" + (i + 1), "id", getPackageName());
-
-            TextView label = findViewById(labelId);
-            TextView value = findViewById(valueId);
-
-            if (label != null) label.setText(stat.label);
-            if (value != null) value.setText(formatValue(stat.value));
+            if (card != null) {
+                card.setEnabled(false);
+            }
         }
     }
 
-    private void disableStatCards() {
-        findViewById(R.id.statCard1).setEnabled(false);
-        findViewById(R.id.statCard2).setEnabled(false);
-        findViewById(R.id.statCard3).setEnabled(false);
-        findViewById(R.id.statCard4).setEnabled(false);
-        findViewById(R.id.statCard5).setEnabled(false);
-        findViewById(R.id.statCard6).setEnabled(false);
+    private void enableStatCards() {
+
+        for (MaterialCardView card :
+                statCards) {
+
+            if (card != null) {
+                card.setEnabled(true);
+            }
+        }
     }
 
-    private void enableStatCards() {
-        findViewById(R.id.statCard1).setEnabled(true);
-        findViewById(R.id.statCard2).setEnabled(true);
-        findViewById(R.id.statCard3).setEnabled(true);
-        findViewById(R.id.statCard4).setEnabled(true);
-        findViewById(R.id.statCard5).setEnabled(true);
-        findViewById(R.id.statCard6).setEnabled(true);
+    // =================================================
+    // CPU
+    // =================================================
+
+    private void triggerCpuTurn() {
+
+        if (cpuTurnScheduled) {
+            return;
+        }
+
+        cpuTurnScheduled = true;
+
+        new android.os.Handler(
+                Looper.getMainLooper()
+        ).postDelayed(() -> {
+
+            cpuTurnScheduled = false;
+
+            if (!isBotMode) {
+                return;
+            }
+
+            if (game.getCurrentPlayerTurn() != 1) {
+                return;
+            }
+
+            CardInfo cpuCard =
+                    game.getPlayerCard(1);
+
+            if (cpuCard == null) {
+                return;
+            }
+
+            int bestStatIndex =
+                    CpuPlayer.getBestStatIndex(
+                            cpuCard
+                    );
+
+            executeRound(
+                    bestStatIndex
+            );
+
+        }, 1000);
     }
 }

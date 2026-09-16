@@ -1,4 +1,7 @@
-package com.example.superultima;
+package com.example.superultima.Decks;
+
+import com.example.superultima.CardInfo;
+import com.example.superultima.R;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,7 +22,7 @@ public class AirplanesDeck {
                 "A1",
                 "F-16 Fighting Falcon",
                 "FIGHTER",
-                R.drawable.a1,
+                R.drawable.airplanes_a1,
                 'A',
                 1,
                 false
@@ -39,7 +42,7 @@ public class AirplanesDeck {
                 "A2",
                 "Dassault Rafale C",
                 "FIGHTER",
-                R.drawable.a2,
+                R.drawable.airplanes_a2,
                 'A',
                 2,
                 false
@@ -59,7 +62,7 @@ public class AirplanesDeck {
                 "A3",
                 "Eurofighter EF 2000 Typhoon",
                 "FIGHTER",
-                R.drawable.a3,
+                R.drawable.airplanes_a3,
                 'A',
                 3,
                 false
@@ -79,7 +82,7 @@ public class AirplanesDeck {
                 "A4",
                 "F-22 Raptor",
                 "FIGHTER",
-                R.drawable.a4,
+                R.drawable.airplanes_a4,
                 'A',
                 4,
                 true
@@ -104,7 +107,7 @@ public class AirplanesDeck {
                 "B1",
                 "Dassault Mirage F1CR",
                 "RECON",
-                R.drawable.b1,
+                R.drawable.airplanes_b1,
                 'B',
                 1,
                 false
@@ -124,7 +127,7 @@ public class AirplanesDeck {
                 "B2",
                 "Grumman RQ-4 Global Hawk",
                 "RECON",
-                R.drawable.b2,
+                R.drawable.airplanes_b2,
                 'B',
                 2,
                 false
@@ -144,7 +147,7 @@ public class AirplanesDeck {
                 "B3",
                 "Lockheed SR-71 Blackbird",
                 "RECON",
-                R.drawable.b3,
+                R.drawable.airplanes_b3,
                 'B',
                 3,
                 false
@@ -164,7 +167,7 @@ public class AirplanesDeck {
                 "B4",
                 "Lockheed U-2R",
                 "RECON",
-                R.drawable.b4,
+                R.drawable.airplanes_b4,
                 'B',
                 4,
                 false
@@ -189,7 +192,7 @@ public class AirplanesDeck {
                 "C1",
                 "Aermacchi M-346",
                 "TRAINER",
-                R.drawable.c1,
+                R.drawable.airplanes_c1,
                 'C',
                 1,
                 false
@@ -209,7 +212,7 @@ public class AirplanesDeck {
                 "C2",
                 "T-2C Buckeye",
                 "TRAINER",
-                R.drawable.c2,
+                R.drawable.airplanes_c2,
                 'C',
                 2,
                 false
@@ -229,7 +232,7 @@ public class AirplanesDeck {
                 "C3",
                 "Aero L-59 Super Albatros",
                 "TRAINER",
-                R.drawable.c3,
+                R.drawable.airplanes_c3,
                 'C',
                 3,
                 false
@@ -249,7 +252,7 @@ public class AirplanesDeck {
                 "C4",
                 "Dassault/Dornier Alpha Jet",
                 "TRAINER",
-                R.drawable.c4,
+                R.drawable.airplanes_c4,
                 'C',
                 4,
                 false
@@ -274,7 +277,7 @@ public class AirplanesDeck {
                 "D1",
                 "Mirage 2000N",
                 "STRIKE FIGHTER",
-                R.drawable.d1,
+                R.drawable.airplanes_d1,
                 'D',
                 1,
                 false
@@ -294,7 +297,7 @@ public class AirplanesDeck {
                 "D2",
                 "F/A-18 Hornet",
                 "STRIKE FIGHTER",
-                R.drawable.d2,
+                R.drawable.airplanes_d2,
                 'D',
                 2,
                 false
@@ -314,7 +317,7 @@ public class AirplanesDeck {
                 "D3",
                 "F-15E Strike Eagle",
                 "STRIKE FIGHTER",
-                R.drawable.d3,
+                R.drawable.airplanes_d3,
                 'D',
                 3,
                 false
@@ -334,7 +337,7 @@ public class AirplanesDeck {
                 "D4",
                 "F-4 Phantom II",
                 "FIGHTER",
-                R.drawable.d4,
+                R.drawable.airplanes_d4,
                 'D',
                 4,
                 false
@@ -359,7 +362,7 @@ public class AirplanesDeck {
                 "E1",
                 "Airbus A300",
                 "TRANSPORT",
-                R.drawable.e1,
+                R.drawable.airplanes_e1,
                 'E',
                 1,
                 false
@@ -379,7 +382,7 @@ public class AirplanesDeck {
                 "E2",
                 "C-130 Hercules",
                 "TRANSPORT",
-                R.drawable.e2,
+                R.drawable.airplanes_e2,
                 'E',
                 2,
                 false
@@ -399,7 +402,7 @@ public class AirplanesDeck {
                 "E3",
                 "C-5B Galaxy",
                 "TRANSPORT",
-                R.drawable.e3,
+                R.drawable.airplanes_e3,
                 'E',
                 3,
                 false
@@ -419,7 +422,7 @@ public class AirplanesDeck {
                 "E4",
                 "C-17A Globemaster III",
                 "TRANSPORT",
-                R.drawable.e4,
+                R.drawable.airplanes_e4,
                 'E',
                 4,
                 false
@@ -444,7 +447,7 @@ public class AirplanesDeck {
                 "F1",
                 "Tornado ECR",
                 "RECON",
-                R.drawable.f1,
+                R.drawable.airplanes_f1,
                 'F',
                 1,
                 false
@@ -464,7 +467,7 @@ public class AirplanesDeck {
                 "F2",
                 "Embraer R-99",
                 "RECON",
-                R.drawable.f2,
+                R.drawable.airplanes_f2,
                 'F',
                 2,
                 false
@@ -484,7 +487,7 @@ public class AirplanesDeck {
                 "F3",
                 "Boeing E-3 AWACS",
                 "AWACS",
-                R.drawable.f3,
+                R.drawable.airplanes_f3,
                 'F',
                 3,
                 false
@@ -504,7 +507,7 @@ public class AirplanesDeck {
                 "F4",
                 "Grumman EA-6B Prowler",
                 "ELECTRONIC WARFARE",
-                R.drawable.f4,
+                R.drawable.airplanes_f4,
                 'F',
                 4,
                 false
@@ -529,7 +532,7 @@ public class AirplanesDeck {
                 "G1",
                 "KC-10A Extender",
                 "TANKER",
-                R.drawable.g1,
+                R.drawable.airplanes_g1,
                 'G',
                 1,
                 false
@@ -549,7 +552,7 @@ public class AirplanesDeck {
                 "G2",
                 "KC-135 Stratotanker",
                 "TANKER",
-                R.drawable.g2,
+                R.drawable.airplanes_g2,
                 'G',
                 2,
                 false
@@ -569,7 +572,7 @@ public class AirplanesDeck {
                 "G3",
                 "Vickers VC10",
                 "TRANSPORT",
-                R.drawable.g3,
+                R.drawable.airplanes_g3,
                 'G',
                 3,
                 false
@@ -589,7 +592,7 @@ public class AirplanesDeck {
                 "G4",
                 "Lockheed S-3 Viking",
                 "RECON",
-                R.drawable.g4,
+                R.drawable.airplanes_g4,
                 'G',
                 4,
                 false
@@ -614,7 +617,7 @@ public class AirplanesDeck {
                 "H1",
                 "F-111C",
                 "STRIKE FIGHTER",
-                R.drawable.h1,
+                R.drawable.airplanes_h1,
                 'H',
                 1,
                 false
@@ -634,7 +637,7 @@ public class AirplanesDeck {
                 "H2",
                 "Sukhoi Su-24 Fencer",
                 "STRIKE FIGHTER",
-                R.drawable.h2,
+                R.drawable.airplanes_h2,
                 'H',
                 2,
                 false
@@ -654,7 +657,7 @@ public class AirplanesDeck {
                 "H3",
                 "B-2 Spirit",
                 "BOMBER",
-                R.drawable.h3,
+                R.drawable.airplanes_h3,
                 'H',
                 3,
                 false
@@ -674,7 +677,7 @@ public class AirplanesDeck {
                 "H4",
                 "Rockwell B-1B Lancer",
                 "BOMBER",
-                R.drawable.h4,
+                R.drawable.airplanes_h4,
                 'H',
                 4,
                 false
