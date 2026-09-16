@@ -10,21 +10,12 @@ import java.util.List;
  */
 public class Game {
 
-    /**
-     * The list of players currently in the game.
-     */
     private final List<Player> players = new ArrayList<>();
     private int currentPlayer;
     private boolean firstRound = true;
     private final List<CardInfo> leftoverCards = new ArrayList<>();
 
-    /**
-     * Constructs a new Game with a specified number of players.
-     *
-     * @param numberOfPlayers The number of players to initialize the game with.
-     */
     public Game(int numberOfPlayers, List<CardInfo> deck) {
-
         if (numberOfPlayers < 2 || numberOfPlayers > 4) {
             throw new IllegalArgumentException("SuperUltima supports 2 to 4 players.");
         }
@@ -34,15 +25,12 @@ public class Game {
             players.add(new Player());
         }
 
-        // Shuffle the deck once
+        // Shuffle and deal
         Collections.shuffle(deck);
-
-        // Deal the cards once
         dealCards(deck);
 
-        // Choose a random starting player
-        currentPlayer =
-                (int) (Math.random() * players.size());
+        // Random starting player
+        currentPlayer = (int) (Math.random() * players.size());
     }
 
     public CardInfo getCurrentCard() {
@@ -53,28 +41,21 @@ public class Game {
         return players.get(currentPlayer);
     }
 
-    // Deal the cards to each player
     private void dealCards(List<CardInfo> deck) {
-
-        int cardsPerPlayer = deck.size() / players.size();// Calculate the number of cards per player
-
-        int cardIndex = 0;// Initialize the card index
+        int cardsPerPlayer = deck.size() / players.size();
+        int cardIndex = 0;
 
         for (Player player : players) {
-
             for (int i = 0; i < cardsPerPlayer; i++) {
-
-                player.addCard(deck.get(cardIndex)); // Deal a card to the player
-                cardIndex++;// Move to the next card in the deck
+                player.addCard(deck.get(cardIndex));
+                cardIndex++;
             }
         }
 
         while (cardIndex < deck.size()) {
-
             leftoverCards.add(deck.get(cardIndex));
             cardIndex++;
         }
-
     }
 
     public List<Player> getPlayers() {
@@ -84,11 +65,9 @@ public class Game {
     public void nextPlayer() {
         do {
             currentPlayer++;
-
             if (currentPlayer >= players.size()) {
                 currentPlayer = 0;
             }
-
         } while (players.get(currentPlayer).getCardCount() == 0);
     }
 
@@ -96,53 +75,46 @@ public class Game {
         return getCurrentCard().statistics[position];
     }
 
-    // Here we determine the winner of the round.
-    // The winner has the highest value.
+    // Determine the round winner
     public int findWinner(int statisticPosition) {
-
         int winner = -1;
 
+        // Find first active player
         for (int i = 0; i < players.size(); i++) {
-
             if (players.get(i).getCardCount() > 0) {
                 winner = i;
                 break;
             }
         }
 
-        for (int i = 0; i < players.size(); i++) {
+        if (winner == -1) return -1; // No players left
 
+        for (int i = 0; i < players.size(); i++) {
             if (i == winner || players.get(i).getCardCount() == 0) {
                 continue;
             }
 
-            CardInfo currentCard =
-                    players.get(i).getTopCard();
+            CardInfo currentCard = players.get(i).getTopCard();
+            CardInfo winnerCard = players.get(winner).getTopCard();
 
-            CardInfo winnerCard =
-                    players.get(winner).getTopCard();
-
-            // SUPER ULTIMA vs normal card
+            // 1. Super Ultima vs Normal Card
             if (currentCard.superUltima && !winnerCard.superUltima) {
-
                 if (winnerCard.number != 1) {
                     winner = i;
                     continue;
                 }
-
             } else if (!currentCard.superUltima && winnerCard.superUltima) {
-
-                if (currentCard.number != 1) {
+                if (currentCard.number == 1) {
+                    winner = i; // Card #1 beats Super Ultima!
                     continue;
+                } else {
+                    continue; // Super Ultima stays winner
                 }
             }
 
-            // Normal statistic comparison
-            double currentValue =
-                    currentCard.statistics[statisticPosition].value;
-
-            double winnerValue =
-                    winnerCard.statistics[statisticPosition].value;
+            // 2. Normal Numeric Comparison
+            double currentValue = currentCard.statistics[statisticPosition].value;
+            double winnerValue = winnerCard.statistics[statisticPosition].value;
 
             if (currentValue > winnerValue) {
                 winner = i;
@@ -152,64 +124,51 @@ public class Game {
         return winner;
     }
 
-
-
-
-    // Collects the top card from every player
-    // and gives them to the winner.
+    // Collects the top card from every player and gives them to the winner
+    // Collects the top card from every player and gives them to the winner's bottom deck
+    // Collects the top card from every player and gives them to the winner's bottom deck
     public void collectCards(int winnerIndex) {
+        List<CardInfo> roundCards = new ArrayList<>();
 
-        Player winner =
-                players.get(winnerIndex);
-
+        // 1. Take the top card from EVERY player (including winner)
         for (Player player : players) {
-            if (player.getCardCount() == 0) {
-                continue;
+            if (player.getCardCount() > 0) {
+                roundCards.add(player.removeTopCard());
             }
+        }
 
-            CardInfo card =
-                    player.removeTopCard();
-
+        // 2. Put ALL collected cards at the bottom of the winner's deck
+        Player winner = players.get(winnerIndex);
+        for (CardInfo card : roundCards) {
             winner.addCard(card);
         }
     }
 
-    // The winner becomes the current player.
     public void setCurrentPlayer(int playerIndex) {
         currentPlayer = playerIndex;
-
-
     }
+
     public boolean isGameOver() {
-
         int playersWithCards = 0;
-
         for (Player player : players) {
-
             if (player.getCardCount() > 0) {
                 playersWithCards++;
             }
         }
-
         return playersWithCards == 1;
     }
+
     public int getWinner() {
-
         for (int i = 0; i < players.size(); i++) {
-
             if (players.get(i).getCardCount() > 0) {
                 return i;
             }
         }
-
         return -1;
     }
 
-
     public int playRound(int statisticPosition) {
-
-        int winner =
-                findWinner(statisticPosition);
+        int winner = findWinner(statisticPosition);
 
         collectCards(winner);
 
@@ -218,22 +177,20 @@ public class Game {
             leftoverCards.clear();
             firstRound = false;
         }
-        setCurrentPlayer(winner);
 
+        setCurrentPlayer(winner);
         return winner;
     }
+
     public int getPlayerQuartets(int playerIndex) {
         return players.get(playerIndex).countQuartets();
     }
+
     public int[] getAllQuartets() {
-
         int[] quartets = new int[players.size()];
-
         for (int i = 0; i < players.size(); i++) {
             quartets[i] = players.get(i).countQuartets();
         }
-
         return quartets;
     }
-
 }
