@@ -17,251 +17,197 @@ import com.google.android.gms.nearby.connection.PayloadTransferUpdate;
 import com.google.android.gms.nearby.connection.Strategy;
 
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.ArrayList;
 
 public class OfflineGameConnection {
 
-    private static final String SERVICE_ID =
-            "com.example.superultima";
+    private static final String SERVICE_ID = "com.example.superultima";
+    private static final String START_GAME_PREFIX = "START_GAME:";
+    private static final String MOVE_PREFIX = "MOVE:";
+    private static final String NEXT_ROUND_PREFIX = "NEXT_ROUND:";
 
-    private static final String START_GAME_PREFIX =
-            "START_GAME:";
+    private static OfflineGameConnection instance;
 
     private final ConnectionsClient connectionsClient;
+    private final Set<String> connectedEndpointIds = new HashSet<>();
 
-    private final Set<String> connectedEndpointIds =
-            new HashSet<>();
-
-    private final ConnectionListener listener;
-
+    private ConnectionListener listener;
     private boolean connectionRequested = false;
+    private boolean isHost = false;
 
-    private ConnectionLifecycleCallback connectionLifecycleCallback;
-    private PayloadCallback payloadCallback;
-    private EndpointDiscoveryCallback endpointDiscoveryCallback;
+    private final ConnectionLifecycleCallback connectionLifecycleCallback;
+    private final PayloadCallback payloadCallback;
+    private final EndpointDiscoveryCallback endpointDiscoveryCallback;
 
     public interface ConnectionListener {
-
-        void onPlayerCountChanged(int playerCount);
-
-        void onGameFound();
-
-        void onGameStarted(String deckName);
-
-        void onConnectionFailed();
+        default void onPlayerCountChanged(int playerCount) {}
+        default void onGameFound() {}
+        default void onGameStarted(String deckName) {}
+        default void onConnectionFailed() {}
+        default void onMoveReceived(int statIndex) {}
+        default void onNextRoundReceived() {}
     }
 
-    public OfflineGameConnection(
-            Context context,
-            ConnectionListener listener) {
+    public static synchronized OfflineGameConnection getInstance(Context context, ConnectionListener listener) {
+        if (instance == null) {
+            instance = new OfflineGameConnection(context.getApplicationContext(), listener);
+        } else {
+            instance.setListener(listener);
+        }
+        return instance;
+    }
 
+    public static synchronized OfflineGameConnection getInstance() {
+        return instance;
+    }
+
+    private OfflineGameConnection(Context context, ConnectionListener listener) {
         this.listener = listener;
+        this.connectionsClient = Nearby.getConnectionsClient(context);
 
-        connectionsClient =
-                Nearby.getConnectionsClient(context);
-
-        // RECEIVES DATA
-        payloadCallback = new PayloadCallback() {
-
+        this.payloadCallback = new PayloadCallback() {
             @Override
-            public void onPayloadReceived(
-                    String endpointId,
-                    Payload payload) {
-
+            public void onPayloadReceived(String endpointId, Payload payload) {
                 if (payload.getType() != Payload.Type.BYTES) {
                     return;
                 }
 
                 byte[] bytes = payload.asBytes();
-
                 if (bytes == null) {
                     return;
                 }
 
-                String message =
-                        new String(
-                                bytes,
-                                StandardCharsets.UTF_8
-                        );
+                String message = new String(bytes, StandardCharsets.UTF_8);
 
                 if (message.startsWith(START_GAME_PREFIX)) {
-
-                    String deckName =
-                            message.substring(
-                                    START_GAME_PREFIX.length()
-                            );
-
-                    listener.onGameStarted(deckName);
+                    String deckName = message.substring(START_GAME_PREFIX.length());
+                    if (OfflineGameConnection.this.listener != null) {
+                        OfflineGameConnection.this.listener.onGameStarted(deckName);
+                    }
+                } else if (message.startsWith(MOVE_PREFIX)) {
+                    int statIndex = Integer.parseInt(message.substring(MOVE_PREFIX.length()));
+                    if (OfflineGameConnection.this.listener != null) {
+                        OfflineGameConnection.this.listener.onMoveReceived(statIndex);
+                    }
+                } else if (message.startsWith(NEXT_ROUND_PREFIX)) {
+                    if (OfflineGameConnection.this.listener != null) {
+                        OfflineGameConnection.this.listener.onNextRoundReceived();
+                    }
                 }
             }
 
             @Override
-            public void onPayloadTransferUpdate(
-                    String endpointId,
-                    PayloadTransferUpdate update) {
+            public void onPayloadTransferUpdate(String endpointId, PayloadTransferUpdate update) {}
+        };
+
+        this.connectionLifecycleCallback = new ConnectionLifecycleCallback() {
+            @Override
+            public void onConnectionInitiated(String endpointId, ConnectionInfo connectionInfo) {
+                if (connectedEndpointIds.size() >= 3) {
+                    connectionsClient.rejectConnection(endpointId);
+                    return;
+                }
+                connectionsClient.acceptConnection(endpointId, payloadCallback);
+            }
+
+            @Override
+            public void onConnectionResult(String endpointId, ConnectionResolution result) {
+                if (result.getStatus().isSuccess()) {
+                    connectedEndpointIds.add(endpointId);
+                    if (OfflineGameConnection.this.listener != null) {
+                        OfflineGameConnection.this.listener.onPlayerCountChanged(connectedEndpointIds.size() + 1);
+                    }
+                } else {
+                    if (OfflineGameConnection.this.listener != null) {
+                        OfflineGameConnection.this.listener.onConnectionFailed();
+                    }
+                }
+            }
+
+            @Override
+            public void onDisconnected(String endpointId) {
+                connectedEndpointIds.remove(endpointId);
+                if (OfflineGameConnection.this.listener != null) {
+                    OfflineGameConnection.this.listener.onPlayerCountChanged(connectedEndpointIds.size() + 1);
+                }
             }
         };
 
-        // CONNECTION EVENTS
-        connectionLifecycleCallback =
-                new ConnectionLifecycleCallback() {
+        this.endpointDiscoveryCallback = new EndpointDiscoveryCallback() {
+            @Override
+            public void onEndpointFound(String endpointId, DiscoveredEndpointInfo info) {
+                if (connectionRequested) {
+                    return;
+                }
+                connectionRequested = true;
 
-                    @Override
-                    public void onConnectionInitiated(
-                            String endpointId,
-                            ConnectionInfo connectionInfo) {
+                if (OfflineGameConnection.this.listener != null) {
+                    OfflineGameConnection.this.listener.onGameFound();
+                }
 
-                        /*
-                         * Maximum 4 players total.
-                         * Host + 3 connected players.
-                         */
-                        if (connectedEndpointIds.size() >= 3) {
+                connectionsClient.requestConnection("SUPER ULTIMA", endpointId, connectionLifecycleCallback);
+            }
 
-                            connectionsClient.rejectConnection(
-                                    endpointId
-                            );
-
-                            return;
-                        }
-
-                        connectionsClient.acceptConnection(
-                                endpointId,
-                                payloadCallback
-                        );
-                    }
-
-                    @Override
-                    public void onConnectionResult(
-                            String endpointId,
-                            ConnectionResolution result) {
-
-                        if (result.getStatus().isSuccess()) {
-
-                            connectedEndpointIds.add(
-                                    endpointId
-                            );
-
-                            listener.onPlayerCountChanged(
-                                    connectedEndpointIds.size() + 1
-                            );
-
-                        } else {
-
-                            listener.onConnectionFailed();
-                        }
-                    }
-
-                    @Override
-                    public void onDisconnected(
-                            String endpointId) {
-
-                        connectedEndpointIds.remove(
-                                endpointId
-                        );
-
-                        listener.onPlayerCountChanged(
-                                connectedEndpointIds.size() + 1
-                        );
-                    }
-                };
-
-        // DISCOVERY
-        endpointDiscoveryCallback =
-                new EndpointDiscoveryCallback() {
-
-                    @Override
-                    public void onEndpointFound(
-                            String endpointId,
-                            DiscoveredEndpointInfo info) {
-
-                        if (connectionRequested) {
-                            return;
-                        }
-
-                        connectionRequested = true;
-
-                        listener.onGameFound();
-
-                        connectionsClient.requestConnection(
-                                "SUPER ULTIMA",
-                                endpointId,
-                                connectionLifecycleCallback
-                        );
-                    }
-
-                    @Override
-                    public void onEndpointLost(
-                            String endpointId) {
-                    }
-                };
+            @Override
+            public void onEndpointLost(String endpointId) {}
+        };
     }
 
-    // HOST
+    public void setListener(ConnectionListener listener) {
+        this.listener = listener;
+    }
+
+    public boolean isHost() {
+        return isHost;
+    }
+
     public void startAdvertising() {
+        this.isHost = true;
+        AdvertisingOptions options = new AdvertisingOptions.Builder()
+                .setStrategy(Strategy.P2P_STAR)
+                .build();
 
-        AdvertisingOptions options =
-                new AdvertisingOptions.Builder()
-                        .setStrategy(Strategy.P2P_STAR)
-                        .build();
-
-        connectionsClient.startAdvertising(
-                "SUPER ULTIMA",
-                SERVICE_ID,
-                connectionLifecycleCallback,
-                options
-        );
+        connectionsClient.startAdvertising("SUPER ULTIMA", SERVICE_ID, connectionLifecycleCallback, options);
     }
 
-    // JOINING PLAYER
     public void startDiscovery() {
+        this.isHost = false;
+        DiscoveryOptions options = new DiscoveryOptions.Builder()
+                .setStrategy(Strategy.P2P_STAR)
+                .build();
 
-        DiscoveryOptions options =
-                new DiscoveryOptions.Builder()
-                        .setStrategy(Strategy.P2P_STAR)
-                        .build();
-
-        connectionsClient.startDiscovery(
-                SERVICE_ID,
-                endpointDiscoveryCallback,
-                options
-        );
+        connectionsClient.startDiscovery(SERVICE_ID, endpointDiscoveryCallback, options);
     }
 
-    // STOP HOSTING
     public void stopAdvertising() {
-
         connectionsClient.stopAdvertising();
     }
 
-    // STOP SEARCHING
     public void stopDiscovery() {
-
         connectionsClient.stopDiscovery();
     }
 
-    // SEND START COMMAND TO ALL CONNECTED PLAYERS
     public void startGame(String deckName) {
+        String message = START_GAME_PREFIX + deckName;
+        Payload payload = Payload.fromBytes(message.getBytes(StandardCharsets.UTF_8));
+        connectionsClient.sendPayload(new ArrayList<>(connectedEndpointIds), payload);
+    }
 
-        String message =
-                START_GAME_PREFIX + deckName;
+    public void sendMove(int statIndex) {
+        String message = MOVE_PREFIX + statIndex;
+        Payload payload = Payload.fromBytes(message.getBytes(StandardCharsets.UTF_8));
+        connectionsClient.sendPayload(new ArrayList<>(connectedEndpointIds), payload);
+    }
 
-        Payload payload =
-                Payload.fromBytes(
-                        message.getBytes(
-                                StandardCharsets.UTF_8
-                        )
-                );
-
-        connectionsClient.sendPayload(
-                new ArrayList<>(connectedEndpointIds),
-                payload
-        );
+    public void sendNextRound() {
+        String message = NEXT_ROUND_PREFIX;
+        Payload payload = Payload.fromBytes(message.getBytes(StandardCharsets.UTF_8));
+        connectionsClient.sendPayload(new ArrayList<>(connectedEndpointIds), payload);
     }
 
     public int getPlayerCount() {
-
         return connectedEndpointIds.size() + 1;
     }
 }

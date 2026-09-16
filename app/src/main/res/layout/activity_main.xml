@@ -38,14 +38,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/titleText">
 
-        <!-- DYNAMIC DECKS HOLDER (AirplanesDeck, CarsDeck, MotoDeck, etc.) -->
+        <!-- DYNAMIC DECKS HOLDER -->
         <LinearLayout
             android:id="@+id/decksContainer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <!-- AIRPLANES DECK (DEFAULT FULL SIZE) -->
+            <!-- AIRPLANES DECK -->
             <LinearLayout
                 android:id="@+id/airplanesPackContainer"
                 android:layout_width="wrap_content"
@@ -98,29 +98,32 @@
         </LinearLayout>
     </HorizontalScrollView>
 
-    <!-- ACTION BUTTONS ROW (PLAY NOW & BROWSE ALL CARDS) -->
+    <!-- STYLED BOTTOM TOOLBAR -->
     <LinearLayout
-        android:id="@+id/actionButtonsContainer"
+        android:id="@+id/bottomToolbar"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
+        android:layout_height="64dp"
+        android:background="#FFD700"
         android:gravity="center"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@id/bottomToolbar"
+        android:paddingHorizontal="6dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
+        <!-- 1. PLAY NOW BUTTON (EXACT) -->
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnPlayNow"
-            android:layout_width="wrap_content"
+            android:id="@+id/playButton"
+            android:layout_width="0dp"
             android:layout_height="52dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginEnd="4dp"
+            android:layout_weight="1.2"
             android:backgroundTint="#D50000"
             android:fontFamily="@font/pixeboy"
-            android:paddingHorizontal="16dp"
+            android:paddingHorizontal="8dp"
             android:text="PLAY NOW"
             android:textColor="#FFFFFF"
-            android:textSize="18sp"
+            android:textSize="15sp"
             app:cornerRadius="10dp"
             app:icon="@android:drawable/ic_media_play"
             app:iconGravity="textStart"
@@ -128,17 +131,19 @@
             app:strokeColor="#FF5252"
             app:strokeWidth="1dp" />
 
+        <!-- 2. BROWSE ALL CARDS BUTTON (EXACT) -->
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnBrowseCards"
-            android:layout_width="wrap_content"
+            android:id="@+id/browseCardsButton"
+            android:layout_width="0dp"
             android:layout_height="52dp"
-            android:layout_marginStart="8dp"
+            android:layout_marginEnd="4dp"
+            android:layout_weight="1.8"
             android:backgroundTint="#252A31"
             android:fontFamily="@font/pixeboy"
-            android:paddingHorizontal="14dp"
+            android:paddingHorizontal="6dp"
             android:text="BROWSE ALL CARDS"
             android:textColor="#FFD700"
-            android:textSize="18sp"
+            android:textSize="15sp"
             app:cornerRadius="10dp"
             app:icon="@android:drawable/ic_menu_compass"
             app:iconGravity="textStart"
@@ -146,57 +151,24 @@
             app:strokeColor="#737B84"
             app:strokeWidth="1dp" />
 
-    </LinearLayout>
-
-    <!-- STYLED BOTTOM TOOLBAR -->
-    <LinearLayout
-        android:id="@+id/bottomToolbar"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:background="#FFD700"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <Button
-            android:id="@+id/playButton"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:backgroundTint="#252A31"
-            android:fontFamily="@font/pixeboy"
-            android:text="PLAY"
-            android:textColor="#D50000"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            app:cornerRadius="0dp" />
-
-        <TextView
-            android:id="@+id/welcomeText"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:fontFamily="@font/homevideoboldr90dv"
-            android:gravity="center"
-            android:text="WELCOME"
-            android:textColor="#000000"
-            android:textSize="24sp"
-            android:textStyle="bold" />
-
-        <Button
+        <!-- 3. RULES BUTTON (STYLIZED TO MATCH) -->
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/rulesButton"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="52dp"
             android:layout_weight="1"
             android:backgroundTint="#252A31"
             android:fontFamily="@font/pixeboy"
+            android:paddingHorizontal="8dp"
             android:text="RULES"
             android:textColor="#FFFFFF"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            app:cornerRadius="0dp" />
+            android:textSize="15sp"
+            app:cornerRadius="10dp"
+            app:icon="@android:drawable/ic_menu_info_details"
+            app:iconGravity="textStart"
+            app:iconTint="#FFFFFF"
+            app:strokeColor="#737B84"
+            app:strokeWidth="1dp" />
 
     </LinearLayout>
 
