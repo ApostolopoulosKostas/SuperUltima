@@ -1,4 +1,6 @@
-package com.example.superultima;
+package com.example.superultima.cpu;
+
+import com.example.superultima.cardgame.CardInfo;
 
 public class CpuPlayer {
 

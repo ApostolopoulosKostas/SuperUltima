@@ -20,8 +20,11 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
-import com.example.superultima.Decks.AirplanesDeck;
-import com.example.superultima.Decks.CarsDeck;
+import com.example.superultima.cardgame.CardInfo;
+import com.example.superultima.cardgame.Game;
+import com.example.superultima.decks.AirplanesDeck;
+import com.example.superultima.decks.CarsDeck;
+import com.example.superultima.networking.OfflineGameConnection;
 import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;

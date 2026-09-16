@@ -1,4 +1,4 @@
-package com.example.superultima;
+package com.example.superultima.cardgame;
 
 import java.util.ArrayList;
 import java.util.List;

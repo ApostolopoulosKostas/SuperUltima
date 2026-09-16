@@ -1,7 +1,9 @@
-package com.example.superultima;
+package com.example.superultima.networking;
 
 import android.content.Context;
 
+import com.example.superultima.cardgame.Game;
+import com.example.superultima.GameStartData;
 import com.google.android.gms.nearby.Nearby;
 import com.google.android.gms.nearby.connection.AdvertisingOptions;
 import com.google.android.gms.nearby.connection.ConnectionInfo;

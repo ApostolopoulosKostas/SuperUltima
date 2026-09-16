@@ -1,6 +1,6 @@
-package com.example.superultima.Decks;
+package com.example.superultima.decks;
 
-import com.example.superultima.CardInfo;
+import com.example.superultima.cardgame.CardInfo;
 
 import java.util.ArrayList;
 import java.util.Collections;

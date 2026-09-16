@@ -1,4 +1,4 @@
-package com.example.superultima;
+package com.example.superultima.cardgame;
 
 import java.io.Serializable;
 import java.util.ArrayList;

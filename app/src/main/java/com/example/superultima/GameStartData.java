@@ -2,6 +2,8 @@ package com.example.superultima;
 
 
 
+import com.example.superultima.cardgame.Game;
+
 import java.io.Serializable;
 
 public class GameStartData implements Serializable {
