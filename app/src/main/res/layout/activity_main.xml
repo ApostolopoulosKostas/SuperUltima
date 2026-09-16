@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
@@ -8,124 +9,195 @@
     android:background="#10131A"
     tools:context=".MainActivity">
 
+    <!-- TITLE -->
     <TextView
         android:id="@+id/titleText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:fontFamily="@font/pixeboy"
         android:text="SUPER ULTIMA"
         android:textColor="#FFD700"
         android:textSize="32sp"
         android:textStyle="bold"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="40dp"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-
-
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/airplanesPack1"
-        android:layout_width="110dp"
-        android:layout_height="140dp"
+    <!-- HORIZONTAL SCROLLVIEW FOR ALL DECKS -->
+    <HorizontalScrollView
+        android:id="@+id/decksHorizontalScrollView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        app:cardCornerRadius="16dp"
-        app:strokeColor="#FFD700"
-        app:strokeWidth="1dp"
-        app:layout_constraintTop_toBottomOf="@id/titleText"
-        app:layout_constraintStart_toStartOf="parent">
+        android:clipToPadding="false"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:scrollbars="none"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/titleText">
 
+        <!-- DYNAMIC DECKS HOLDER (AirplanesDeck, CarsDeck, MotoDeck, etc.) -->
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:padding="0dp">
+            android:id="@+id/decksContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/cardeckbackround"
-                android:scaleType="centerCrop"
-                >
+            <!-- AIRPLANES DECK (DEFAULT FULL SIZE) -->
+            <LinearLayout
+                android:id="@+id/airplanesPackContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:gravity="center"
+                android:orientation="vertical">
 
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="212dp"
-                    android:src="@drawable/airplane1frontimage">
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/airplanesPack1"
+                    android:layout_width="110dp"
+                    android:layout_height="140dp"
+                    app:cardCornerRadius="16dp"
+                    app:strokeColor="#FFD700"
+                    app:strokeWidth="1dp">
 
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:padding="0dp">
 
-                </ImageView>
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/cardeckbackround"
+                            android:scaleType="centerCrop">
 
-            </FrameLayout>
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="212dp"
+                                android:src="@drawable/airplane1frontimage" />
+                        </FrameLayout>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <TextView
+                    android:id="@+id/airplanesText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:fontFamily="@font/homevideoboldr90dv"
+                    android:text="AIRPLANES"
+                    android:textColor="#2B65EC"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
 
         </LinearLayout>
+    </HorizontalScrollView>
 
-
-
-
-    </com.google.android.material.card.MaterialCardView>
-
-    <TextView
-        android:id="@+id/airplanesText"
-        android:layout_width="wrap_content"
+    <!-- ACTION BUTTONS ROW (PLAY NOW & BROWSE ALL CARDS) -->
+    <LinearLayout
+        android:id="@+id/actionButtonsContainer"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:text="AIRPLANES"
-        android:textColor="#2B65EC"
-        android:textSize="16sp"
-        android:fontFamily="@font/homevideoboldr90dv"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="@id/airplanesPack1"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="@id/airplanesPack1"
-        app:layout_constraintTop_toBottomOf="@id/airplanesPack1" />
+        android:layout_marginBottom="16dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@id/bottomToolbar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnPlayNow"
+            android:layout_width="wrap_content"
+            android:layout_height="52dp"
+            android:layout_marginEnd="8dp"
+            android:backgroundTint="#D50000"
+            android:fontFamily="@font/pixeboy"
+            android:paddingHorizontal="16dp"
+            android:text="PLAY NOW"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            app:cornerRadius="10dp"
+            app:icon="@android:drawable/ic_media_play"
+            app:iconGravity="textStart"
+            app:iconTint="#FFFFFF"
+            app:strokeColor="#FF5252"
+            app:strokeWidth="1dp" />
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnBrowseCards"
+            android:layout_width="wrap_content"
+            android:layout_height="52dp"
+            android:layout_marginStart="8dp"
+            android:backgroundTint="#252A31"
+            android:fontFamily="@font/pixeboy"
+            android:paddingHorizontal="14dp"
+            android:text="BROWSE ALL CARDS"
+            android:textColor="#FFD700"
+            android:textSize="18sp"
+            app:cornerRadius="10dp"
+            app:icon="@android:drawable/ic_menu_compass"
+            app:iconGravity="textStart"
+            app:iconTint="#FFD700"
+            app:strokeColor="#737B84"
+            app:strokeWidth="1dp" />
+
+    </LinearLayout>
+
+    <!-- STYLED BOTTOM TOOLBAR -->
     <LinearLayout
         android:id="@+id/bottomToolbar"
         android:layout_width="0dp"
         android:layout_height="50dp"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
         android:background="#FFD700"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
         <Button
             android:id="@+id/playButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:backgroundTint="#252A31"
+            android:fontFamily="@font/pixeboy"
             android:text="PLAY"
-            android:textColor="#F8C11B17"
+            android:textColor="#D50000"
+            android:textSize="18sp"
             android:textStyle="bold"
-            android:backgroundTint="#252A31"/>
+            app:cornerRadius="0dp" />
 
         <TextView
             android:id="@+id/welcomeText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="2"
+            android:fontFamily="@font/homevideoboldr90dv"
             android:gravity="center"
             android:text="WELCOME"
-            android:textColor="@color/black"
-            android:fontFamily="@font/homevideoboldr90dv"
+            android:textColor="#000000"
             android:textSize="24sp"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
 
         <Button
             android:id="@+id/rulesButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:backgroundTint="#252A31"
+            android:fontFamily="@font/pixeboy"
             android:text="RULES"
-            android:textColor="#FF000000"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
             android:textStyle="bold"
-            android:backgroundTint="#252A31"/>
-
+            app:cornerRadius="0dp" />
 
     </LinearLayout>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
