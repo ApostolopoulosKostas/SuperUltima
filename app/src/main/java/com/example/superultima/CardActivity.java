@@ -16,21 +16,29 @@ import com.example.superultima.decks.AirplanesDeck;
 
 import java.util.List;
 
+/**
+ * CardActivity is used to browse through a deck of cards.
+ * It allows the user to see the details (image, name, stats) of each card
+ * by navigating forward and backward through the list.
+ */
 public class CardActivity extends AppCompatActivity {
 
+    // UI elements for displaying card details
     private TextView cardCode;
     private TextView cardName;
     private TextView cardType;
-
     private ImageView cardImage;
 
+    // Arrays to hold references to the labels and value views for the 6 statistics
     private TextView[] labels = new TextView[6];
     private TextView[] values = new TextView[6];
 
+    // Navigation buttons
     private Button homeButton;
     private Button prevButton;
     private Button nextButton;
 
+    // The list of cards being browsed and the current index
     private List<CardInfo> cards;
     private int currentCard = 0;
 
@@ -38,10 +46,11 @@ public class CardActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // Enable edge-to-edge display
         EdgeToEdge.enable(this);
-
         setContentView(R.layout.card);
 
+        // Initialize UI component references
         homeButton = findViewById(R.id.homeButton);
         prevButton = findViewById(R.id.prevButton);
         nextButton = findViewById(R.id.nextButton);
@@ -49,9 +58,9 @@ public class CardActivity extends AppCompatActivity {
         cardCode = findViewById(R.id.cardCode);
         cardName = findViewById(R.id.cardName);
         cardType = findViewById(R.id.cardType);
-
         cardImage = findViewById(R.id.cardImage);
 
+        // Bind statistic labels and values (slots 1 to 6)
         labels[0] = findViewById(R.id.label1);
         labels[1] = findViewById(R.id.label2);
         labels[2] = findViewById(R.id.label3);
@@ -66,78 +75,77 @@ public class CardActivity extends AppCompatActivity {
         values[4] = findViewById(R.id.value5);
         values[5] = findViewById(R.id.value6);
 
+        // Home button exits the browser and returns to the previous screen
         homeButton.setOnClickListener(v -> finish());
 
+        // Load the Airplanes deck by default for browsing
         AirplanesDeck deck = new AirplanesDeck();
         cards = deck.getCards();
 
+        // Next button: increments the index and loops back to the start if at the end
         nextButton.setOnClickListener(v -> {
-
             currentCard++;
-
             if (currentCard >= cards.size()) {
                 currentCard = 0;
             }
-
             showCard(cards.get(currentCard));
         });
 
+        // Previous button: decrements the index and loops to the end if at the start
         prevButton.setOnClickListener(v -> {
-
             currentCard--;
-
             if (currentCard < 0) {
                 currentCard = cards.size() - 1;
             }
-
             showCard(cards.get(currentCard));
         });
 
+        // Display the first card initially
         showCard(cards.get(currentCard));
 
+        // Handle window insets to avoid UI overlap with system bars (status/nav bars)
         ViewCompat.setOnApplyWindowInsetsListener(
                 findViewById(R.id.main),
                 (v, insets) -> {
-
-                    Insets systemBars =
-                            insets.getInsets(
-                                    WindowInsetsCompat.Type.systemBars()
-                            );
-
+                    Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
                     v.setPadding(
                             systemBars.left,
                             systemBars.top,
                             systemBars.right,
                             systemBars.bottom
                     );
-
                     return insets;
                 }
         );
     }
 
+    /**
+     * Updates the UI views with the data from the specified card.
+     * @param card The CardInfo object to display.
+     */
     private void showCard(CardInfo card) {
-
+        // Set basic card metadata
         cardCode.setText(card.code);
         cardName.setText(card.name);
         cardType.setText(card.type);
 
+        // Load the card's illustration
         cardImage.setImageResource(card.image);
 
+        // Iterate through and display the 6 statistics
         for (int i = 0; i < 6; i++) {
-
-            CardInfo.Statistic statistic =
-                    card.statistics[i];
-
-            labels[i].setText(statistic.label);
-
-            values[i].setText(
-                    String.format(
-                            "%.1f %s",
-                            statistic.value,
-                            statistic.unit
-                    )
-            );
+            CardInfo.Statistic statistic = card.statistics[i];
+            if (statistic != null) {
+                labels[i].setText(statistic.label);
+                // Format the value to show one decimal place and include the unit
+                values[i].setText(
+                        String.format(
+                                "%.1f %s",
+                                statistic.value,
+                                statistic.unit
+                        )
+                );
+            }
         }
     }
 }

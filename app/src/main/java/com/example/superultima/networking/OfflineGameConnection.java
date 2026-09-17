@@ -27,393 +27,217 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Manages the offline multiplayer connections using Google Nearby Connections API.
+ * This class handles device discovery, advertising, connection management, 
+ * and data synchronization (moves, game start, round transitions).
+ */
 public class OfflineGameConnection {
 
-    private static final String SERVICE_ID =
-            "com.example.superultima";
+    /** Unique service identifier for the Nearby Connections API. */
+    private static final String SERVICE_ID = "com.example.superultima";
 
-    private static final String MOVE_PREFIX =
-            "MOVE:";
+    /** Prefix for payload messages indicating a player move. */
+    private static final String MOVE_PREFIX = "MOVE:";
 
-    private static final String NEXT_ROUND_PREFIX =
-            "NEXT_ROUND:";
+    /** Prefix for payload messages indicating the transition to the next round. */
+    private static final String NEXT_ROUND_PREFIX = "NEXT_ROUND:";
 
+    /** Singleton instance of the connection manager. */
     private static OfflineGameConnection instance;
 
+    /** Client for interacting with the Google Nearby Connections service. */
     private final ConnectionsClient connectionsClient;
 
-    private final Set<String> connectedEndpointIds =
-            new HashSet<>();
+    /** Set of endpoint IDs for all currently connected players. */
+    private final Set<String> connectedEndpointIds = new HashSet<>();
 
+    /** Listener for connection and game events. */
     private ConnectionListener listener;
 
+    /** Flag to prevent duplicate connection requests. */
     private boolean connectionRequested = false;
 
+    /** Indicates if the local device is the game host. */
     private boolean isHost = false;
 
     private final ConnectionLifecycleCallback connectionLifecycleCallback;
-
     private final PayloadCallback payloadCallback;
-
     private final EndpointDiscoveryCallback endpointDiscoveryCallback;
 
+    /**
+     * Interface for components interested in connection and gameplay events.
+     */
     public interface ConnectionListener {
+        /** Called when the number of connected players changes. */
+        default void onPlayerCountChanged(int playerCount) {}
 
-        default void onPlayerCountChanged(
-                int playerCount) {
-        }
+        /** Called when a nearby game is discovered. */
+        default void onGameFound() {}
 
-        default void onGameFound() {
-        }
+        /** Called when the host starts the game with a specific deck and state. */
+        default void onGameStarted(String deckName, Game game) {}
 
-        default void onGameStarted(
-                String deckName,
-                Game game) {
-        }
+        /** Called when a connection attempt fails. */
+        default void onConnectionFailed() {}
 
-        default void onConnectionFailed() {
-        }
+        /** Called when a move (stat selection) is received from another player. */
+        default void onMoveReceived(int statIndex) {}
 
-        default void onMoveReceived(
-                int statIndex) {
-        }
-
-        default void onNextRoundReceived() {
-        }
+        /** Called when a signal to proceed to the next round is received. */
+        default void onNextRoundReceived() {}
     }
 
-    public static synchronized OfflineGameConnection getInstance(
-            Context context,
-            ConnectionListener listener) {
-
+    /**
+     * Gets or creates the singleton instance.
+     * @param context Application context.
+     * @param listener Initial event listener.
+     */
+    public static synchronized OfflineGameConnection getInstance(Context context, ConnectionListener listener) {
         if (instance == null) {
-
-            instance =
-                    new OfflineGameConnection(
-                            context.getApplicationContext(),
-                            listener
-                    );
-
+            instance = new OfflineGameConnection(context.getApplicationContext(), listener);
         } else {
-
             instance.setListener(listener);
         }
-
         return instance;
     }
 
+    /**
+     * Retrieves the existing singleton instance.
+     */
     public static synchronized OfflineGameConnection getInstance() {
         return instance;
     }
 
-    private OfflineGameConnection(
-            Context context,
-            ConnectionListener listener) {
-
+    private OfflineGameConnection(Context context, ConnectionListener listener) {
         this.listener = listener;
+        connectionsClient = Nearby.getConnectionsClient(context);
 
-        connectionsClient =
-                Nearby.getConnectionsClient(context);
+        // --- RECEIVE DATA LOGIC ---
+        payloadCallback = new PayloadCallback() {
+            @Override
+            public void onPayloadReceived(String endpointId, Payload payload) {
+                if (payload.getType() != Payload.Type.BYTES) return;
 
-        // -------------------------------------------------
-        // RECEIVE DATA
-        // -------------------------------------------------
+                byte[] bytes = payload.asBytes();
+                if (bytes == null) return;
 
-        payloadCallback =
-                new PayloadCallback() {
+                // 1. Attempt to deserialize as GameStartData (complex object)
+                try {
+                    ByteArrayInputStream input = new ByteArrayInputStream(bytes);
+                    ObjectInputStream objectInput = new ObjectInputStream(input);
+                    Object object = objectInput.readObject();
 
-                    @Override
-                    public void onPayloadReceived(
-                            String endpointId,
-                            Payload payload) {
-
-                        if (payload.getType()
-                                != Payload.Type.BYTES) {
-
-                            return;
+                    if (object instanceof GameStartData) {
+                        GameStartData data = (GameStartData) object;
+                        if (OfflineGameConnection.this.listener != null) {
+                            OfflineGameConnection.this.listener.onGameStarted(data.deckName, data.game);
                         }
-
-                        byte[] bytes =
-                                payload.asBytes();
-
-                        if (bytes == null) {
-                            return;
-                        }
-
-                        // ---------------------------------
-                        // TRY GAME START DATA
-                        // ---------------------------------
-
-                        try {
-
-                            ByteArrayInputStream input =
-                                    new ByteArrayInputStream(
-                                            bytes
-                                    );
-
-                            ObjectInputStream objectInput =
-                                    new ObjectInputStream(
-                                            input
-                                    );
-
-                            Object object =
-                                    objectInput.readObject();
-
-                            if (object
-                                    instanceof GameStartData) {
-
-                                GameStartData data =
-                                        (GameStartData) object;
-
-                                if (OfflineGameConnection.this.listener
-                                        != null) {
-
-                                    OfflineGameConnection.this.listener
-                                            .onGameStarted(
-                                                    data.deckName,
-                                                    data.game
-                                            );
-                                }
-
-                                return;
-                            }
-
-                        } catch (Exception ignored) {
-
-                            // Not a GameStartData object.
-                            // It may be a normal text command.
-                        }
-
-                        // ---------------------------------
-                        // NORMAL TEXT COMMAND
-                        // ---------------------------------
-
-                        String message =
-                                new String(
-                                        bytes,
-                                        StandardCharsets.UTF_8
-                                );
-
-                        if (message.startsWith(
-                                MOVE_PREFIX)) {
-
-                            int statIndex =
-                                    Integer.parseInt(
-                                            message.substring(
-                                                    MOVE_PREFIX.length()
-                                            )
-                                    );
-
-                            if (OfflineGameConnection.this.listener
-                                    != null) {
-
-                                OfflineGameConnection.this.listener
-                                        .onMoveReceived(
-                                                statIndex
-                                        );
-                            }
-
-                        } else if (message.startsWith(
-                                NEXT_ROUND_PREFIX)) {
-
-                            if (OfflineGameConnection.this.listener
-                                    != null) {
-
-                                OfflineGameConnection.this.listener
-                                        .onNextRoundReceived();
-                            }
-                        }
+                        return;
                     }
+                } catch (Exception ignored) {
+                    // Not game start data, proceed to check for text commands.
+                }
 
-                    @Override
-                    public void onPayloadTransferUpdate(
-                            String endpointId,
-                            PayloadTransferUpdate update) {
+                // 2. Parse as string command (moves or round sync)
+                String message = new String(bytes, StandardCharsets.UTF_8);
+                if (message.startsWith(MOVE_PREFIX)) {
+                    int statIndex = Integer.parseInt(message.substring(MOVE_PREFIX.length()));
+                    if (OfflineGameConnection.this.listener != null) {
+                        OfflineGameConnection.this.listener.onMoveReceived(statIndex);
                     }
-                };
-
-        // -------------------------------------------------
-        // CONNECTION CALLBACK
-        // -------------------------------------------------
-
-        connectionLifecycleCallback =
-                new ConnectionLifecycleCallback() {
-
-                    @Override
-                    public void onConnectionInitiated(
-                            String endpointId,
-                            ConnectionInfo connectionInfo) {
-
-                        // Maximum 4 players total.
-                        if (connectedEndpointIds.size()
-                                >= 3) {
-
-                            connectionsClient
-                                    .rejectConnection(
-                                            endpointId
-                                    );
-
-                            return;
-                        }
-
-                        connectionsClient
-                                .acceptConnection(
-                                        endpointId,
-                                        payloadCallback
-                                );
+                } else if (message.startsWith(NEXT_ROUND_PREFIX)) {
+                    if (OfflineGameConnection.this.listener != null) {
+                        OfflineGameConnection.this.listener.onNextRoundReceived();
                     }
+                }
+            }
 
-                    @Override
-                    public void onConnectionResult(
-                            String endpointId,
-                            ConnectionResolution result) {
+            @Override
+            public void onPayloadTransferUpdate(String endpointId, PayloadTransferUpdate update) {}
+        };
 
-                        if (result.getStatus()
-                                .isSuccess()) {
+        // --- CONNECTION MANAGEMENT LOGIC ---
+        connectionLifecycleCallback = new ConnectionLifecycleCallback() {
+            @Override
+            public void onConnectionInitiated(String endpointId, ConnectionInfo connectionInfo) {
+                // Limit to 4 players total (Host + 3 Guests).
+                if (connectedEndpointIds.size() >= 3) {
+                    connectionsClient.rejectConnection(endpointId);
+                    return;
+                }
+                // Automatically accept the connection.
+                connectionsClient.acceptConnection(endpointId, payloadCallback);
+            }
 
-                            connectedEndpointIds.add(
-                                    endpointId
-                            );
-
-                            if (OfflineGameConnection.this.listener
-                                    != null) {
-
-                                OfflineGameConnection.this.listener
-                                        .onPlayerCountChanged(
-                                                connectedEndpointIds.size()
-                                                        + 1
-                                        );
-                            }
-
-                        } else {
-
-                            if (OfflineGameConnection.this.listener
-                                    != null) {
-
-                                OfflineGameConnection.this.listener
-                                        .onConnectionFailed();
-                            }
-                        }
+            @Override
+            public void onConnectionResult(String endpointId, ConnectionResolution result) {
+                if (result.getStatus().isSuccess()) {
+                    connectedEndpointIds.add(endpointId);
+                    if (OfflineGameConnection.this.listener != null) {
+                        OfflineGameConnection.this.listener.onPlayerCountChanged(connectedEndpointIds.size() + 1);
                     }
-
-                    @Override
-                    public void onDisconnected(
-                            String endpointId) {
-
-                        connectedEndpointIds.remove(
-                                endpointId
-                        );
-
-                        if (OfflineGameConnection.this.listener
-                                != null) {
-
-                            OfflineGameConnection.this.listener
-                                    .onPlayerCountChanged(
-                                            connectedEndpointIds.size()
-                                                    + 1
-                                    );
-                        }
+                } else {
+                    if (OfflineGameConnection.this.listener != null) {
+                        OfflineGameConnection.this.listener.onConnectionFailed();
                     }
-                };
+                }
+            }
 
-        // -------------------------------------------------
-        // DISCOVERY CALLBACK
-        // -------------------------------------------------
+            @Override
+            public void onDisconnected(String endpointId) {
+                connectedEndpointIds.remove(endpointId);
+                if (OfflineGameConnection.this.listener != null) {
+                    OfflineGameConnection.this.listener.onPlayerCountChanged(connectedEndpointIds.size() + 1);
+                }
+            }
+        };
 
-        endpointDiscoveryCallback =
-                new EndpointDiscoveryCallback() {
+        // --- DISCOVERY LOGIC ---
+        endpointDiscoveryCallback = new EndpointDiscoveryCallback() {
+            @Override
+            public void onEndpointFound(String endpointId, DiscoveredEndpointInfo info) {
+                if (connectionRequested) return;
+                connectionRequested = true;
 
-                    @Override
-                    public void onEndpointFound(
-                            String endpointId,
-                            DiscoveredEndpointInfo info) {
+                if (OfflineGameConnection.this.listener != null) {
+                    OfflineGameConnection.this.listener.onGameFound();
+                }
 
-                        if (connectionRequested) {
-                            return;
-                        }
+                // Automatically request connection to the first discovered game.
+                connectionsClient.requestConnection("SUPER ULTIMA", endpointId, connectionLifecycleCallback);
+            }
 
-                        connectionRequested = true;
-
-                        if (OfflineGameConnection.this.listener
-                                != null) {
-
-                            OfflineGameConnection.this.listener
-                                    .onGameFound();
-                        }
-
-                        connectionsClient.requestConnection(
-                                "SUPER ULTIMA",
-                                endpointId,
-                                connectionLifecycleCallback
-                        );
-                    }
-
-                    @Override
-                    public void onEndpointLost(
-                            String endpointId) {
-                    }
-                };
+            @Override
+            public void onEndpointLost(String endpointId) {}
+        };
     }
 
-    // -------------------------------------------------
-    // LISTENER
-    // -------------------------------------------------
-
-    public void setListener(
-            ConnectionListener listener) {
-
+    public void setListener(ConnectionListener listener) {
         this.listener = listener;
     }
-
-    // -------------------------------------------------
-    // HOST
-    // -------------------------------------------------
 
     public boolean isHost() {
         return isHost;
     }
 
+    /**
+     * Starts advertising the device as a game host.
+     */
     public void startAdvertising() {
-
         isHost = true;
-
-        AdvertisingOptions options =
-                new AdvertisingOptions.Builder()
-                        .setStrategy(
-                                Strategy.P2P_STAR
-                        )
-                        .build();
-
-        connectionsClient.startAdvertising(
-                "SUPER ULTIMA",
-                SERVICE_ID,
-                connectionLifecycleCallback,
-                options
-        );
+        AdvertisingOptions options = new AdvertisingOptions.Builder().setStrategy(Strategy.P2P_STAR).build();
+        connectionsClient.startAdvertising("SUPER ULTIMA", SERVICE_ID, connectionLifecycleCallback, options);
     }
 
-    // -------------------------------------------------
-    // CLIENT
-    // -------------------------------------------------
-
+    /**
+     * Starts searching for existing game hosts.
+     */
     public void startDiscovery() {
-
         isHost = false;
-
         connectionRequested = false;
-
-        DiscoveryOptions options =
-                new DiscoveryOptions.Builder()
-                        .setStrategy(
-                                Strategy.P2P_STAR
-                        )
-                        .build();
-
-        connectionsClient.startDiscovery(
-                SERVICE_ID,
-                endpointDiscoveryCallback,
-                options
-        );
+        DiscoveryOptions options = new DiscoveryOptions.Builder().setStrategy(Strategy.P2P_STAR).build();
+        connectionsClient.startDiscovery(SERVICE_ID, endpointDiscoveryCallback, options);
     }
 
     public void stopAdvertising() {
@@ -424,110 +248,44 @@ public class OfflineGameConnection {
         connectionsClient.stopDiscovery();
     }
 
-    // -------------------------------------------------
-    // START GAME
-    // -------------------------------------------------
-
-    public void startGame(
-            String deckName,
-            Game game) {
-
-        GameStartData data =
-                new GameStartData(
-                        deckName,
-                        game
-                );
-
+    /**
+     * Broadcasts the game start signal and shared game state to all connected guests.
+     */
+    public void startGame(String deckName, Game game) {
+        GameStartData data = new GameStartData(deckName, game);
         try {
-
-            ByteArrayOutputStream output =
-                    new ByteArrayOutputStream();
-
-            ObjectOutputStream objectOutput =
-                    new ObjectOutputStream(
-                            output
-                    );
-
+            ByteArrayOutputStream output = new ByteArrayOutputStream();
+            ObjectOutputStream objectOutput = new ObjectOutputStream(output);
             objectOutput.writeObject(data);
-
             objectOutput.flush();
+            byte[] bytes = output.toByteArray();
 
-            byte[] bytes =
-                    output.toByteArray();
-
-            Payload payload =
-                    Payload.fromBytes(bytes);
-
-            connectionsClient.sendPayload(
-                    new ArrayList<>(
-                            connectedEndpointIds
-                    ),
-                    payload
-            );
-
+            Payload payload = Payload.fromBytes(bytes);
+            connectionsClient.sendPayload(new ArrayList<>(connectedEndpointIds), payload);
         } catch (Exception e) {
-
             e.printStackTrace();
         }
     }
 
-    // -------------------------------------------------
-    // SEND STATISTIC
-    // -------------------------------------------------
-
-    public void sendMove(
-            int statIndex) {
-
-        String message =
-                MOVE_PREFIX
-                        + statIndex;
-
-        Payload payload =
-                Payload.fromBytes(
-                        message.getBytes(
-                                StandardCharsets.UTF_8
-                        )
-                );
-
-        connectionsClient.sendPayload(
-                new ArrayList<>(
-                        connectedEndpointIds
-                ),
-                payload
-        );
+    /**
+     * Sends a player's move (the index of the selected statistic) to other players.
+     */
+    public void sendMove(int statIndex) {
+        String message = MOVE_PREFIX + statIndex;
+        Payload payload = Payload.fromBytes(message.getBytes(StandardCharsets.UTF_8));
+        connectionsClient.sendPayload(new ArrayList<>(connectedEndpointIds), payload);
     }
 
-    // -------------------------------------------------
-    // NEXT ROUND
-    // -------------------------------------------------
-
+    /**
+     * Sends a signal to proceed to the next round to all connected players.
+     */
     public void sendNextRound() {
-
-        String message =
-                NEXT_ROUND_PREFIX;
-
-        Payload payload =
-                Payload.fromBytes(
-                        message.getBytes(
-                                StandardCharsets.UTF_8
-                        )
-                );
-
-        connectionsClient.sendPayload(
-                new ArrayList<>(
-                        connectedEndpointIds
-                ),
-                payload
-        );
+        String message = NEXT_ROUND_PREFIX;
+        Payload payload = Payload.fromBytes(message.getBytes(StandardCharsets.UTF_8));
+        connectionsClient.sendPayload(new ArrayList<>(connectedEndpointIds), payload);
     }
-
-    // -------------------------------------------------
-    // PLAYER COUNT
-    // -------------------------------------------------
 
     public int getPlayerCount() {
-
-        return connectedEndpointIds.size()
-                + 1;
+        return connectedEndpointIds.size() + 1;
     }
 }
