@@ -11,6 +11,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.superultima.cardgame.CardActivity;
 import com.example.superultima.cardgame.CardInfo;
 import com.example.superultima.decks.AirplanesDeck;
 

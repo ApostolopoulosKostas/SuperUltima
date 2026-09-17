@@ -1,4 +1,4 @@
-package com.example.superultima;
+package com.example.superultima.cardgame;
 
 import android.os.Bundle;
 import android.widget.Button;
@@ -11,7 +11,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.example.superultima.cardgame.CardInfo;
+import com.example.superultima.R;
 import com.example.superultima.decks.AirplanesDeck;
 
 import java.util.List;

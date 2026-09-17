@@ -32,7 +32,7 @@
             android:exported="false" />
 
         <activity
-            android:name=".CardActivity"
+            android:name=".cardgame.CardActivity"
             android:exported="false" />
 
         <activity

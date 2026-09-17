@@ -1,4 +1,4 @@
 package com.example.superultima.decks;
 
-public class Warships {
+public class Robots {
 }

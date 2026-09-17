@@ -1,4 +1,4 @@
 package com.example.superultima.decks;
 
-public class Ships {
+public class TanksDeck {
 }
