@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -10,15 +9,16 @@
     android:background="#10131A"
     tools:context=".cardgame.CardActivity">
 
+    <!-- OUTER CARD TEMPLATE WITH GOLD BORDER -->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/cardTemplate"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="16dp"
         app:cardCornerRadius="18dp"
-        app:cardBackgroundColor="#252A31"
-        app:strokeColor="#737B84"
-        app:strokeWidth="2dp"
+        app:cardBackgroundColor="#000000"
+        app:strokeColor="#FFD700"
+        app:strokeWidth="4dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -27,10 +27,9 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#C0C0C0">
+            android:background="#121212">
 
             <!-- HEADER -->
-
             <LinearLayout
                 android:id="@+id/headerBar"
                 android:layout_width="0dp"
@@ -38,19 +37,16 @@
                 android:orientation="horizontal"
                 android:background="#000000"
                 android:elevation="4dp"
-                android:paddingStart="12dp"
-                android:paddingEnd="12dp"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent">
 
-                <!-- CARD CODE -->
-
+                <!-- CARD CODE BADGE (Gold with Black text) -->
                 <FrameLayout
                     android:id="@+id/codeBadge"
-                    android:layout_width="56dp"
+                    android:layout_width="64dp"
                     android:layout_height="match_parent"
-                    android:background="#0000FF">
+                    android:background="#FFD700">
 
                     <TextView
                         android:id="@+id/cardCode"
@@ -58,22 +54,22 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:text=""
-                        android:textColor="#FFFFFF"
-                        android:textSize="40sp"
+                        android:textColor="#000000"
+                        android:textSize="36sp"
                         android:textStyle="bold"
                         android:fontFamily="@font/pixeboy"/>
 
                 </FrameLayout>
 
                 <!-- CARD NAME + TYPE -->
-
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:orientation="vertical"
                     android:gravity="center_vertical"
-                    android:paddingStart="12dp">
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp">
 
                     <TextView
                         android:id="@+id/cardName"
@@ -81,9 +77,11 @@
                         android:layout_height="wrap_content"
                         android:text=""
                         android:textColor="#FFD700"
-                        android:textSize="30sp"
+                        android:textSize="26sp"
                         android:textStyle="bold"
-                        android:fontFamily="@font/pixeboy"/>
+                        android:fontFamily="@font/pixeboy"
+                        android:maxLines="1"
+                        android:ellipsize="end"/>
 
                     <TextView
                         android:id="@+id/cardType"
@@ -99,14 +97,12 @@
 
             </LinearLayout>
 
-
-            <!-- IMAGE + BUTTONS -->
-
+            <!-- IMAGE + OVERLAYS -->
             <FrameLayout
                 android:id="@+id/imageFrame"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_margin="16dp"
+                android:layout_margin="12dp"
                 android:background="#1C2127"
                 app:layout_constraintTop_toBottomOf="@id/headerBar"
                 app:layout_constraintBottom_toTopOf="@id/statsContainer"
@@ -114,7 +110,6 @@
                 app:layout_constraintEnd_toEndOf="parent">
 
                 <!-- CARD IMAGE -->
-
                 <ImageView
                     android:id="@+id/cardImage"
                     android:layout_width="match_parent"
@@ -122,31 +117,44 @@
                     android:scaleType="fitXY"
                     android:src="@null"/>
 
-                <!-- PREVIOUS -->
+                <!-- SUPER ULTIMA LABEL -->
+                <TextView
+                    android:id="@+id/superUltimaLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|center_horizontal"
+                    android:layout_marginBottom="65dp"
+                    android:background="#99000000"
+                    android:gravity="center"
+                    android:text="★ SUPER ULTIMA ★"
+                    android:textColor="#FF0000"
+                    android:textSize="22sp"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/pixeboy"
+                    android:visibility="gone"/>
 
+                <!-- PREV -->
                 <Button
                     android:id="@+id/prevButton"
-                    android:layout_width="90dp"
-                    android:layout_height="45dp"
+                    android:layout_width="80dp"
+                    android:layout_height="40dp"
                     android:layout_gravity="bottom|start"
-                    android:layout_marginStart="12dp"
-                    android:layout_marginBottom="12dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginBottom="8dp"
                     android:text="PREV"
                     android:textColor="#FFFFFF"
-                    android:textSize="16sp"
+                    android:textSize="14sp"
                     android:textStyle="bold"
                     android:backgroundTint="#333333"
                     android:fontFamily="@font/pixeboy"/>
 
                 <!-- HOME -->
-
                 <Button
                     android:id="@+id/homeButton"
-                    android:layout_width="90dp"
-                    android:layout_height="45dp"
+                    android:layout_width="80dp"
+                    android:layout_height="40dp"
                     android:layout_gravity="bottom|center"
-                    android:layout_marginStart="2dp"
-                    android:layout_marginBottom="12dp"
+                    android:layout_marginBottom="8dp"
                     android:backgroundTint="#333333"
                     android:fontFamily="@font/pixeboy"
                     android:text="HOME"
@@ -155,69 +163,68 @@
                     android:textStyle="bold"/>
 
                 <!-- NEXT -->
-
                 <Button
                     android:id="@+id/nextButton"
-                    android:layout_width="90dp"
-                    android:layout_height="45dp"
+                    android:layout_width="80dp"
+                    android:layout_height="40dp"
                     android:layout_gravity="bottom|end"
-                    android:layout_marginEnd="12dp"
-                    android:layout_marginBottom="12dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
                     android:text="NEXT"
                     android:textColor="#FFFFFF"
-                    android:textSize="16sp"
+                    android:textSize="14sp"
                     android:textStyle="bold"
                     android:backgroundTint="#333333"
                     android:fontFamily="@font/pixeboy"/>
 
             </FrameLayout>
 
-
-            <!-- STATISTICS -->
-
+            <!-- STATISTICS CONTAINER -->
             <LinearLayout
                 android:id="@+id/statsContainer"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_margin="12dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12dp"
+                android:layout_marginBottom="12dp"
                 android:orientation="vertical"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent">
 
-
                 <!-- ROW 1 -->
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:layout_marginBottom="8dp">
+                    android:layout_marginBottom="6dp">
 
                     <!-- STAT 1 -->
-
                     <com.google.android.material.card.MaterialCardView
                         android:id="@+id/statCard1"
                         android:layout_width="0dp"
-                        android:layout_height="74dp"
+                        android:layout_height="64dp"
                         android:layout_weight="1"
-                        android:layout_marginEnd="6dp"
-                        app:cardCornerRadius="16dp"
-                        app:cardBackgroundColor="#D93B3B">
+                        android:layout_marginEnd="4dp"
+                        app:cardCornerRadius="12dp"
+                        app:cardBackgroundColor="#1C2127"
+                        app:strokeColor="#333333"
+                        app:strokeWidth="1dp">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:orientation="vertical"
-                            android:gravity="center">
+                            android:gravity="center"
+                            android:padding="4dp">
 
                             <TextView
                                 android:id="@+id/label1"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text=""
-                                android:textColor="#000000"
-                                android:textSize="24sp"
+                                android:textColor="#FFD700"
+                                android:textSize="16sp"
                                 android:textStyle="bold"
                                 android:fontFamily="@font/homevideoboldr90dv"/>
 
@@ -226,39 +233,39 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text=""
-                                android:textColor="#000000"
-                                android:textSize="20sp"
+                                android:textColor="#FFFFFF"
+                                android:textSize="18sp"
                                 android:fontFamily="@font/pixeboy"/>
 
                         </LinearLayout>
-
                     </com.google.android.material.card.MaterialCardView>
 
-
                     <!-- STAT 2 -->
-
                     <com.google.android.material.card.MaterialCardView
-                        android:layout_width="0dp"
                         android:id="@+id/statCard2"
-                        android:layout_height="74dp"
+                        android:layout_width="0dp"
+                        android:layout_height="64dp"
                         android:layout_weight="1"
-                        android:layout_marginStart="6dp"
-                        app:cardCornerRadius="16dp"
-                        app:cardBackgroundColor="#2E8B57">
+                        android:layout_marginStart="4dp"
+                        app:cardCornerRadius="12dp"
+                        app:cardBackgroundColor="#1C2127"
+                        app:strokeColor="#333333"
+                        app:strokeWidth="1dp">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:orientation="vertical"
-                            android:gravity="center">
+                            android:gravity="center"
+                            android:padding="4dp">
 
                             <TextView
                                 android:id="@+id/label2"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text=""
-                                android:textColor="#000000"
-                                android:textSize="24sp"
+                                android:textColor="#FFD700"
+                                android:textSize="16sp"
                                 android:textStyle="bold"
                                 android:fontFamily="@font/homevideoboldr90dv"/>
 
@@ -267,49 +274,47 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text=""
-                                android:textColor="#000000"
-                                android:textSize="20sp"
+                                android:textColor="#FFFFFF"
+                                android:textSize="18sp"
                                 android:fontFamily="@font/pixeboy"/>
 
                         </LinearLayout>
-
                     </com.google.android.material.card.MaterialCardView>
-
                 </LinearLayout>
 
-
                 <!-- ROW 2 -->
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:layout_marginBottom="8dp">
+                    android:layout_marginBottom="6dp">
 
                     <!-- STAT 3 -->
-
                     <com.google.android.material.card.MaterialCardView
-                        android:layout_width="0dp"
                         android:id="@+id/statCard3"
-                        android:layout_height="74dp"
+                        android:layout_width="0dp"
+                        android:layout_height="64dp"
                         android:layout_weight="1"
-                        android:layout_marginEnd="6dp"
-                        app:cardCornerRadius="16dp"
-                        app:cardBackgroundColor="#8A2BE2">
+                        android:layout_marginEnd="4dp"
+                        app:cardCornerRadius="12dp"
+                        app:cardBackgroundColor="#1C2127"
+                        app:strokeColor="#333333"
+                        app:strokeWidth="1dp">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:orientation="vertical"
-                            android:gravity="center">
+                            android:gravity="center"
+                            android:padding="4dp">
 
                             <TextView
                                 android:id="@+id/label3"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text=""
-                                android:textColor="#000000"
-                                android:textSize="24sp"
+                                android:textColor="#FFD700"
+                                android:textSize="16sp"
                                 android:textStyle="bold"
                                 android:fontFamily="@font/homevideoboldr90dv"/>
 
@@ -318,39 +323,39 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text=""
-                                android:textColor="#000000"
-                                android:textSize="20sp"
+                                android:textColor="#FFFFFF"
+                                android:textSize="18sp"
                                 android:fontFamily="@font/pixeboy"/>
 
                         </LinearLayout>
-
                     </com.google.android.material.card.MaterialCardView>
 
-
                     <!-- STAT 4 -->
-
                     <com.google.android.material.card.MaterialCardView
-                        android:layout_width="0dp"
                         android:id="@+id/statCard4"
-                        android:layout_height="74dp"
+                        android:layout_width="0dp"
+                        android:layout_height="64dp"
                         android:layout_weight="1"
-                        android:layout_marginStart="6dp"
-                        app:cardCornerRadius="16dp"
-                        app:cardBackgroundColor="#00A8E8">
+                        android:layout_marginStart="4dp"
+                        app:cardCornerRadius="12dp"
+                        app:cardBackgroundColor="#1C2127"
+                        app:strokeColor="#333333"
+                        app:strokeWidth="1dp">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:orientation="vertical"
-                            android:gravity="center">
+                            android:gravity="center"
+                            android:padding="4dp">
 
                             <TextView
                                 android:id="@+id/label4"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text=""
-                                android:textColor="#000000"
-                                android:textSize="24sp"
+                                android:textColor="#FFD700"
+                                android:textSize="16sp"
                                 android:textStyle="bold"
                                 android:fontFamily="@font/homevideoboldr90dv"/>
 
@@ -359,48 +364,46 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text=""
-                                android:textColor="#000000"
-                                android:textSize="20sp"
+                                android:textColor="#FFFFFF"
+                                android:textSize="18sp"
                                 android:fontFamily="@font/pixeboy"/>
 
                         </LinearLayout>
-
                     </com.google.android.material.card.MaterialCardView>
-
                 </LinearLayout>
 
-
                 <!-- ROW 3 -->
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
                     <!-- STAT 5 -->
-
                     <com.google.android.material.card.MaterialCardView
-                        android:layout_width="0dp"
                         android:id="@+id/statCard5"
-                        android:layout_height="74dp"
+                        android:layout_width="0dp"
+                        android:layout_height="64dp"
                         android:layout_weight="1"
-                        android:layout_marginEnd="6dp"
-                        app:cardCornerRadius="16dp"
-                        app:cardBackgroundColor="#1F6FD8">
+                        android:layout_marginEnd="4dp"
+                        app:cardCornerRadius="12dp"
+                        app:cardBackgroundColor="#1C2127"
+                        app:strokeColor="#333333"
+                        app:strokeWidth="1dp">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:orientation="vertical"
-                            android:gravity="center">
+                            android:gravity="center"
+                            android:padding="4dp">
 
                             <TextView
                                 android:id="@+id/label5"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text=""
-                                android:textColor="#000000"
-                                android:textSize="24sp"
+                                android:textColor="#FFD700"
+                                android:textSize="16sp"
                                 android:textStyle="bold"
                                 android:fontFamily="@font/homevideoboldr90dv"/>
 
@@ -409,39 +412,39 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text=""
-                                android:textColor="#000000"
-                                android:textSize="20sp"
+                                android:textColor="#FFFFFF"
+                                android:textSize="18sp"
                                 android:fontFamily="@font/pixeboy"/>
 
                         </LinearLayout>
-
                     </com.google.android.material.card.MaterialCardView>
 
-
                     <!-- STAT 6 -->
-
                     <com.google.android.material.card.MaterialCardView
-                        android:layout_width="0dp"
                         android:id="@+id/statCard6"
-                        android:layout_height="74dp"
+                        android:layout_width="0dp"
+                        android:layout_height="64dp"
                         android:layout_weight="1"
-                        android:layout_marginStart="6dp"
-                        app:cardCornerRadius="16dp"
-                        app:cardBackgroundColor="#F39C12">
+                        android:layout_marginStart="4dp"
+                        app:cardCornerRadius="12dp"
+                        app:cardBackgroundColor="#1C2127"
+                        app:strokeColor="#333333"
+                        app:strokeWidth="1dp">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:orientation="vertical"
-                            android:gravity="center">
+                            android:gravity="center"
+                            android:padding="4dp">
 
                             <TextView
                                 android:id="@+id/label6"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text=""
-                                android:textColor="#000000"
-                                android:textSize="24sp"
+                                android:textColor="#FFD700"
+                                android:textSize="16sp"
                                 android:textStyle="bold"
                                 android:fontFamily="@font/homevideoboldr90dv"/>
 
@@ -450,14 +453,12 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text=""
-                                android:textColor="#000000"
-                                android:textSize="20sp"
+                                android:textColor="#FFFFFF"
+                                android:textSize="18sp"
                                 android:fontFamily="@font/pixeboy"/>
 
                         </LinearLayout>
-
                     </com.google.android.material.card.MaterialCardView>
-
                 </LinearLayout>
 
             </LinearLayout>
