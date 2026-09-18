@@ -7,16 +7,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.example.superultima.cardgame.CardInfo;
 import com.example.superultima.cardgame.Game;
 import com.example.superultima.cpu.CpuPlayer;
 import com.example.superultima.networking.OfflineGameConnection;
 import com.google.android.material.card.MaterialCardView;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;

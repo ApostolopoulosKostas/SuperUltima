@@ -42,9 +42,11 @@
         android:fontFamily="@font/homevideoboldr90dv"
         android:text=""
         android:textColor="#2B65EC"
-        android:textSize="16sp"
+        android:textSize="8sp"
         android:textStyle="bold"
-        android:singleLine="true"/>
-
+        android:gravity="center"
+        android:singleLine="true"
+        android:ellipsize="none"
+        android:includeFontPadding="false"/>
 
 </LinearLayout>

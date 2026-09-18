@@ -10,10 +10,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-
+import android.view.View;
 import com.example.superultima.R;
-
-
 import java.util.List;
 
 /**
@@ -41,14 +39,19 @@ public class CardActivity extends AppCompatActivity {
     // The list of cards being browsed and the current index
     private List<CardInfo> cards;
     private int currentCard = 0;
+    private TextView superUltimaLabel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        superUltimaLabel = findViewById(R.id.superUltimaLabel);
+
         // Enable edge-to-edge display
         EdgeToEdge.enable(this);
         setContentView(R.layout.card);
+        superUltimaLabel = findViewById(R.id.superUltimaLabel);
+
 
         // Initialize UI component references
         homeButton = findViewById(R.id.homeButton);
@@ -129,6 +132,14 @@ public class CardActivity extends AppCompatActivity {
 
         // Load the card's illustration
         cardImage.setImageResource(card.image);
+
+  //Super Ultima label to be shown in Super Ultima Card
+
+        if (card.superUltima) {
+            superUltimaLabel.setVisibility(View.VISIBLE);
+        } else {
+            superUltimaLabel.setVisibility(View.GONE);
+        }
 
         // Iterate through and display the 6 statistics
         for (int i = 0; i < 6; i++) {
