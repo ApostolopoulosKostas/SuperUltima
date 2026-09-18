@@ -4,6 +4,7 @@ import com.example.superultima.R;
 import com.example.superultima.cardgame.CardInfo;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class CinemaCars {
@@ -12,7 +13,7 @@ public class CinemaCars {
 
     public CinemaCars() {
 //A
-        //A1
+//A1
         CardInfo a1 = new CardInfo(
                 "A1",
                 "Dodje Charger",
@@ -31,8 +32,7 @@ public class CinemaCars {
         a1.addStatistic(5, "Εngine Τorque", 664, "nm");
 
         cards.add(a1);
-
-        //A2
+//A2
         CardInfo a2 = new CardInfo(
                 "A2",
                 "Delorean DMC-12",
@@ -53,7 +53,7 @@ public class CinemaCars {
         cards.add(a2);
 
 
-        //A3
+//A3
         CardInfo a3 = new CardInfo(
                 "A3",
                 "Pontiac Firebird Trans-Am",
@@ -73,7 +73,7 @@ public class CinemaCars {
 
         cards.add(a3);
 
-        //A4
+//A4
         CardInfo a4 = new CardInfo(
                 "A4",
                 "Cadillac Miller-Meteor Ecto-1",
@@ -94,7 +94,7 @@ public class CinemaCars {
         cards.add(a4);
 //B
 
-        //B1
+//B1
         CardInfo b1 = new CardInfo(
                 "B1",
                 "Ferrari Testarossa",
@@ -114,7 +114,7 @@ public class CinemaCars {
 
         cards.add(b1);
 
-        //B2
+//B2
         CardInfo b2 = new CardInfo(
                 "B2",
                 "Lotus Esprit",
@@ -134,7 +134,7 @@ public class CinemaCars {
 
         cards.add(b2);
 
-        //B3
+//B3
         CardInfo b3 = new CardInfo(
                 "B3",
                 "Volkswagen Beetle",
@@ -154,7 +154,7 @@ public class CinemaCars {
 
         cards.add(b3);
 
-        //B4
+//B4
         CardInfo b4 = new CardInfo(
                 "B4",
                 "Plymouth Fury",
@@ -174,7 +174,7 @@ public class CinemaCars {
 
         cards.add(b4);
 //C
-        //C1
+//C1
         CardInfo c1 = new CardInfo(
                 "C1",
                 "Ferrari 308 GTS",
@@ -194,7 +194,7 @@ public class CinemaCars {
 
         cards.add(c1);
 
-        //C2
+//C2
         CardInfo c2 = new CardInfo(
                 "C2",
                 "Nissan GT-R R34",
@@ -214,7 +214,7 @@ public class CinemaCars {
 
         cards.add(c2);
 
-        //C3
+//C3
         CardInfo c3 = new CardInfo(
                 "C3",
                 "Ford Thunderbird convertable",
@@ -233,7 +233,7 @@ public class CinemaCars {
         c3.addStatistic(5, "Εngine Τorque", 579, "nm");
 
         cards.add(c3);
-        //C4
+//C4
         CardInfo c4 = new CardInfo(
                 "C4",
                 "Dodge Monaco",
@@ -298,7 +298,7 @@ public class CinemaCars {
 //D3
         CardInfo d3 = new CardInfo(
                 "D3",
-                "V  olvo P1800 S",
+                "Volvo P1800 S",
                 "The Saint series",
                 R.drawable.moviecars_d3,
                 'D',
@@ -454,7 +454,7 @@ public class CinemaCars {
  //F3
         CardInfo f3 = new CardInfo(
                 "F3",
-                "Mustang Munich",
+                "Mustang Mach 1",
                 "Gone in 60 seconds",
                 R.drawable.moviecars_f3,
                 'F',
@@ -572,7 +572,7 @@ public class CinemaCars {
                 "H1",
                 "Porche 917K",
                 "Le Mans",
-                R.drawable.moviecars_f1,
+                R.drawable.moviecars_h1,
                 'H',
                 1,
                 false
@@ -591,7 +591,7 @@ public class CinemaCars {
                 "H2",
                 "Ford Mustang GT390 Fastback",
                 "Bullitt",
-                R.drawable.moviecars_f2,
+                R.drawable.moviecars_h2,
                 'H',
                 2,
                 false
@@ -626,7 +626,7 @@ public class CinemaCars {
         cards.add(h3);
 //H4
         CardInfo h4 = new CardInfo(
-                "H1",
+                "H4",
                 "Fiat 128 1300",
                 "Rush",
                 R.drawable.moviecars_h4,
@@ -646,6 +646,13 @@ public class CinemaCars {
 
 
 
+    }
+    public List<CardInfo> getCards() {
+        return cards;
+    }
+
+    public void shuffle() {
+        Collections.shuffle(cards);
     }
 
     }

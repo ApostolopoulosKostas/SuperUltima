@@ -12,7 +12,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.superultima.R;
-import com.example.superultima.decks.AirplanesDeck;
+
 
 import java.util.List;
 
@@ -78,9 +78,7 @@ public class CardActivity extends AppCompatActivity {
         // Home button exits the browser and returns to the previous screen
         homeButton.setOnClickListener(v -> finish());
 
-        // Load the Airplanes deck by default for browsing
-        AirplanesDeck deck = new AirplanesDeck();
-        cards = deck.getCards();
+        cards = (List<CardInfo>) getIntent().getSerializableExtra("deck");
 
         // Next button: increments the index and loops back to the start if at the end
         nextButton.setOnClickListener(v -> {

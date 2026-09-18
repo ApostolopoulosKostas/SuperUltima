@@ -22,11 +22,10 @@ import androidx.core.content.ContextCompat;
 
 import com.example.superultima.cardgame.CardInfo;
 import com.example.superultima.cardgame.Game;
-import com.example.superultima.decks.AirplanesDeck;
-import com.example.superultima.decks.CarsDeck;
 import com.example.superultima.networking.OfflineGameConnection;
 import com.google.android.material.button.MaterialButton;
-
+import com.example.superultima.decksdata.DeckInfo;
+import com.example.superultima.decksdata.DecksRepository;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -121,49 +120,51 @@ public class GameSetupActivity extends AppCompatActivity {
 
     /** Configures the spinner used to select between different card decks. */
     private void setupDeckSpinner() {
-        String[] deckThemes = {"Airplanes", "Cars"};
 
-        // Custom adapter to style the spinner text and dropdown
+        List<DeckInfo> decks = DecksRepository.getDecks();
+
+        List<String> deckNames = new ArrayList<>();
+
+        for (DeckInfo deck : decks) {
+            deckNames.add(deck.name);
+        }
+
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-                        this,
-                        android.R.layout.simple_spinner_item,
-                        deckThemes) {
-                    @Override
-                    public View getView(int position, View convertView, ViewGroup parent) {
-                        TextView view = (TextView) super.getView(position, convertView, parent);
-                        view.setTextColor(Color.WHITE);
-                        view.setTextSize(14f);
-                        return view;
-                    }
+                this,
+                android.R.layout.simple_spinner_item,
+                deckNames) {
 
-                    @Override
-                    public View getDropDownView(int position, View convertView, ViewGroup parent) {
-                        TextView view = (TextView) super.getView(position, convertView, parent);
-                        view.setTextColor(Color.WHITE);
-                        view.setBackgroundColor(Color.parseColor("#171C24"));
-                        view.setPadding(24, 24, 24, 24);
-                        return view;
-                    }
-                };
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                TextView view = (TextView) super.getView(position, convertView, parent);
+                view.setTextColor(Color.WHITE);
+                view.setTextSize(14f);
+                return view;
+            }
+
+            @Override
+            public View getDropDownView(int position, View convertView, ViewGroup parent) {
+                TextView view = (TextView) super.getView(position, convertView, parent);
+                view.setTextColor(Color.WHITE);
+                view.setBackgroundColor(Color.parseColor("#171C24"));
+                view.setPadding(24, 24, 24, 24);
+                return view;
+            }
+        };
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         deckSpinner.setAdapter(adapter);
 
-        // Update the selectedDeckCards list when a theme is picked
         deckSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String selectedTheme = parent.getItemAtPosition(position).toString();
-                if (selectedTheme.equals("Airplanes")) {
-                    selectedDeckCards = new AirplanesDeck().getCards();
-                } else if (selectedTheme.equals("Cars")) {
-                    selectedDeckCards = new CarsDeck().getCards();
-                }
+                selectedDeckCards = decks.get(position).cards;
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                selectedDeckCards = new AirplanesDeck().getCards();
+                selectedDeckCards = decks.get(0).cards;
             }
         });
     }

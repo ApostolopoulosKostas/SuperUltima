@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -38,64 +40,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/titleText">
 
-        <!-- DYNAMIC DECKS HOLDER -->
+        <!-- DECKS ARE ADDED HERE BY JAVA -->
         <LinearLayout
             android:id="@+id/decksContainer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal" />
 
-            <!-- AIRPLANES DECK -->
-            <LinearLayout
-                android:id="@+id/airplanesPackContainer"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/airplanesPack1"
-                    android:layout_width="110dp"
-                    android:layout_height="140dp"
-                    app:cardCornerRadius="16dp"
-                    app:strokeColor="#FFD700"
-                    app:strokeWidth="1dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:padding="0dp">
-
-                        <FrameLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:background="@drawable/cardeckbackround"
-                            android:scaleType="centerCrop">
-
-                            <ImageView
-                                android:layout_width="match_parent"
-                                android:layout_height="212dp"
-                                android:src="@drawable/airplane1frontimage" />
-                        </FrameLayout>
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-
-                <TextView
-                    android:id="@+id/airplanesText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:fontFamily="@font/homevideoboldr90dv"
-                    android:text="AIRPLANES"
-                    android:textColor="#2B65EC"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
-
-        </LinearLayout>
     </HorizontalScrollView>
 
     <!-- STYLED BOTTOM TOOLBAR -->
@@ -111,7 +62,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <!-- 1. PLAY NOW BUTTON (EXACT) -->
+        <!-- 1. PLAY NOW BUTTON -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/playButton"
             android:layout_width="0dp"
@@ -131,7 +82,7 @@
             app:strokeColor="#FF5252"
             app:strokeWidth="1dp" />
 
-        <!-- 2. BROWSE ALL CARDS BUTTON (EXACT) -->
+        <!-- 2. BROWSE ALL CARDS BUTTON -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/browseCardsButton"
             android:layout_width="0dp"
@@ -151,7 +102,7 @@
             app:strokeColor="#737B84"
             app:strokeWidth="1dp" />
 
-        <!-- 3. RULES BUTTON (STYLIZED TO MATCH) -->
+        <!-- 3. RULES BUTTON -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/rulesButton"
             android:layout_width="0dp"
@@ -173,3 +124,4 @@
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+

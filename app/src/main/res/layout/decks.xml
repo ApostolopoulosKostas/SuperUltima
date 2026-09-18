@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="110dp"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:layout_marginHorizontal="4dp">
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/deckCard"
+        android:layout_width="110dp"
+        android:layout_height="140dp"
+        app:cardCornerRadius="16dp"
+        app:strokeColor="#FFD700"
+        app:strokeWidth="1dp">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/cardeckbackround">
+
+            <ImageView
+                android:id="@+id/deckImage"
+                android:layout_width="60dp"
+                android:layout_height="50dp"
+                android:layout_gravity="bottom|center_horizontal"
+                android:scaleType="fitCenter"
+                android:src="@drawable/airplane1frontimage" />
+
+        </FrameLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <TextView
+        android:id="@+id/deckName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:fontFamily="@font/homevideoboldr90dv"
+        android:text=""
+        android:textColor="#2B65EC"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:singleLine="true"/>
+
+
+</LinearLayout>
