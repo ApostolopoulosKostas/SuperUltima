@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -37,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
-        LinearLayout decksContainer = findViewById(R.id.decksContainer);
+        GridLayout decksContainer = findViewById(R.id.decksContainer);
 
         List<DeckInfo> decks = DecksRepository.getDecks();
 
