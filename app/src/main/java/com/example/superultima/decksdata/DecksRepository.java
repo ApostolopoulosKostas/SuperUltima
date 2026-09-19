@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.example.superultima.decks.Dinosaurs;
+import com.example.superultima.decks.LegendaryWeapons;
 import com.example.superultima.decks.MythicalGods;
 import com.example.superultima.decks.MythicalHeroes;
 import com.example.superultima.decks.MythicalMonsters;
@@ -66,6 +67,13 @@ public class DecksRepository {
                 R.drawable.dino_a1,
                 new Dinosaurs().getCards()
         ));
+
+        decks.add(new DeckInfo(
+                "Legendary Weapons",
+                R.drawable.weapons_a1,
+                new LegendaryWeapons().getCards()
+        ));
+
 
 
 
