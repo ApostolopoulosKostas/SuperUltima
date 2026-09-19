@@ -33,9 +33,9 @@ public class GameActivity extends AppCompatActivity {
     /** Singleton manager for nearby device synchronization. */
     private OfflineGameConnection connection;
 
-    /** 
+    /**
      * Local player index on this device.
-     * Host = index 0, Guest = index 1. 
+     * Host = index 0, Guest = index 1.
      */
     private int localPlayerId = 0;
 
@@ -59,6 +59,13 @@ public class GameActivity extends AppCompatActivity {
 
     /** Prevents multiple CPU move calculations from triggering at once. */
     private boolean cpuTurnScheduled = false;
+
+    /**
+     * The card that was on screen when the player picked a statistic.
+     * playRound() removes cards from play immediately, so we keep this
+     * reference around to know the stat's label/unit for the result dialog.
+     */
+    private CardInfo lastDisplayedCard;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -207,39 +214,59 @@ public class GameActivity extends AppCompatActivity {
     private void executeRound(int statisticPosition) {
         disableStatCards();
 
+        // Grab the label/unit for the stat being compared, from the card that
+        // was on screen before playRound() consumes it.
+        String statLabel = "STAT";
+        String statUnit = "";
+        if (lastDisplayedCard != null && lastDisplayedCard.statistics[statisticPosition] != null) {
+            CardInfo.Statistic selectedStat = lastDisplayedCard.statistics[statisticPosition];
+            statLabel = selectedStat.label;
+            statUnit = (selectedStat.unit != null) ? selectedStat.unit : "";
+        }
+
         // Perform the round logic comparison.
-        int winnerIndex = game.playRound(statisticPosition);
+        Game.RoundResult result = game.playRound(statisticPosition);
+
+        // Build the "PLAYER: value unit" breakdown shown for every round.
+        String comparisonText = buildComparisonText(statLabel, statUnit, result.statValues);
 
         // Check for overall Game Over.
         if (game.isGameOver()) {
             int overallWinner = game.getWinner();
             new AlertDialog.Builder(GameActivity.this)
                     .setTitle("GAME OVER")
-                    .setMessage("Player " + (overallWinner + 1) + " wins the game!")
+                    .setMessage(comparisonText + "\n\nPlayer " + (overallWinner + 1) + " wins the game!")
                     .setCancelable(false)
                     .setPositiveButton("FINISH", (dialog, which) -> finish())
                     .show();
             return;
         }
 
-        // Show round results.
-        boolean cpuWon = isBotMode && winnerIndex == 1;
         AlertDialog.Builder builder = new AlertDialog.Builder(GameActivity.this)
-                .setTitle("ROUND RESULT")
+                .setTitle(result.isTie() ? "IT'S A TIE!" : "ROUND RESULT")
                 .setCancelable(false);
 
-        if (cpuWon) {
-            // CPU wins continue automatically after a delay to simulate flow.
-            builder.setMessage("Player " + (winnerIndex + 1) + " won this round!\n\nCPU will continue...");
+        String outcomeLine = result.isTie()
+                ? "\n\nNo one wins this round - the cards carry over to the next one!"
+                : "\n\nPlayer " + (result.winnerIndex + 1) + " won this round!";
+
+        // After a tie, the SAME player who picked continues to pick next.
+        // After a win, the winner picks next. Either way, check if that's the CPU.
+        int nextPicker = result.isTie() ? game.getCurrentPlayerTurn() : result.winnerIndex;
+        boolean cpuContinues = isBotMode && nextPicker == 1;
+
+        builder.setMessage(comparisonText + outcomeLine
+                + (cpuContinues ? "\n\nCPU will continue..." : ""));
+
+        if (cpuContinues) {
+            // CPU's turn continues automatically after a short delay.
             activeResultDialog = builder.create();
             activeResultDialog.show();
-
             new android.os.Handler(Looper.getMainLooper()).postDelayed(this::advanceToNextRound, 1500);
             return;
         }
 
         // Human turn result: Show message and wait for user to click "Next".
-        builder.setMessage("Player " + (winnerIndex + 1) + " won this round!");
         builder.setPositiveButton("NEXT TURN", (dialog, which) -> {
             if (connection != null && !isBotMode) {
                 connection.sendNextRound();
@@ -249,6 +276,27 @@ public class GameActivity extends AppCompatActivity {
 
         activeResultDialog = builder.create();
         activeResultDialog.show();
+    }
+
+    /**
+     * Builds a readable "who had what" breakdown for the round result dialog,
+     * e.g. "SPEED\n\nPlayer 1: 2414 km/h\nPlayer 2: 2495 km/h".
+     */
+    private String buildComparisonText(String statLabel, String statUnit, double[] statValues) {
+        StringBuilder sb = new StringBuilder(statLabel.toUpperCase());
+
+        for (int i = 0; i < statValues.length; i++) {
+            if (Double.isNaN(statValues[i])) continue; // that player was already out.
+
+            String playerName = (isBotMode && i == 1) ? "CPU" : "Player " + (i + 1);
+            String valueText = formatValue(statValues[i]);
+            if (!statUnit.isEmpty()) {
+                valueText += " " + statUnit;
+            }
+            sb.append("\n").append(playerName).append(": ").append(valueText);
+        }
+
+        return sb.toString();
     }
 
     /**
@@ -273,6 +321,8 @@ public class GameActivity extends AppCompatActivity {
     private void displayCurrentCard() {
         CardInfo currentCard = game.getPlayerCard(localPlayerId);
         if (currentCard == null) return;
+
+        lastDisplayedCard = currentCard;
 
         // Card header bindings.
         TextView cardCode = findViewById(R.id.cardCode);

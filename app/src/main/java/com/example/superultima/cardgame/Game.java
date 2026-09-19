@@ -15,12 +15,44 @@ public class Game implements Serializable {
 
     /** Number of players in the game (Local + Remote or Local + CPU). */
     private int playerCount;
-    
+
     /** Index of the player whose turn it is to pick a statistic. */
     private int currentPlayerTurn = 0;
-    
+
     /** Each player has their own list of cards (their deck). */
     private List<List<CardInfo>> playerDecks;
+
+    /**
+     * Cards held aside during a tie. When a round ties, no one wins yet -
+     * the cards wait here and get added to whoever wins the NEXT round.
+     */
+    private List<CardInfo> pot = new ArrayList<>();
+
+    /**
+     * The outcome of a single round: who won (or -1 for a tie), and the
+     * stat value each player's card had, so the UI can show both sides.
+     */
+    public static class RoundResult implements Serializable {
+        private static final long serialVersionUID = 1L;
+
+        /** Index of the winning player, or -1 if the round was a tie. */
+        public final int winnerIndex;
+
+        /**
+         * The compared stat's value for each player, indexed by player id.
+         * Double.NaN means that player had no card in this round (already out).
+         */
+        public final double[] statValues;
+
+        public RoundResult(int winnerIndex, double[] statValues) {
+            this.winnerIndex = winnerIndex;
+            this.statValues = statValues;
+        }
+
+        public boolean isTie() {
+            return winnerIndex == -1;
+        }
+    }
 
     /**
      * Initializes a new game, shuffles the deck, and deals cards to all players.
@@ -77,13 +109,20 @@ public class Game implements Serializable {
 
     /**
      * Plays a round by comparing the selected statistic across all active players.
-     * The player with the highest value wins all cards played in the round.
+     * The player with the highest value wins all cards played in the round
+     * (plus anything left over from a previous tie). If two or more players
+     * tie for the highest value, no one wins yet - the cards carry over into
+     * the pot and get claimed by the winner of the next round.
      * @param statIndex The index of the statistic being compared (0-5).
-     * @return The index of the player who won the round.
+     * @return A RoundResult describing the winner (or tie) and each player's stat value.
      */
-    public int playRound(int statIndex) {
-        int roundWinner = currentPlayerTurn;
+    public RoundResult playRound(int statIndex) {
+        double[] statValues = new double[playerCount];
+        java.util.Arrays.fill(statValues, Double.NaN);
+
+        int roundWinner = -1;
         double highestValue = Double.NEGATIVE_INFINITY;
+        boolean tie = false;
         List<CardInfo> roundCards = new ArrayList<>();
 
         // Collect the top card from every player who still has cards.
@@ -99,22 +138,39 @@ public class Game implements Serializable {
                 CardInfo.Statistic stat = card.statistics[statIndex];
                 if (stat != null) {
                     double value = stat.value;
-                    // Update winner if this card has a higher value.
+                    statValues[i] = value;
+
                     if (value > highestValue) {
+                        // Strictly higher: this player is the new sole leader.
                         highestValue = value;
                         roundWinner = i;
+                        tie = false;
+                    } else if (value == highestValue) {
+                        // Equal to the current best: it's a tie (for now).
+                        tie = true;
                     }
                 }
             }
         }
 
-        // The winner receives all cards from the round at the bottom of their deck.
-        playerDecks.get(roundWinner).addAll(roundCards);
+        // This round's cards always go into the pot first.
+        pot.addAll(roundCards);
+
+        if (tie) {
+            // No one wins yet - the pot (including these cards) carries over
+            // to whoever wins the next round. Turn stays with the same player.
+            return new RoundResult(-1, statValues);
+        }
+
+        // The winner takes the entire pot: this round's cards plus anything
+        // carried over from a previous tie.
+        playerDecks.get(roundWinner).addAll(pot);
+        pot.clear();
 
         // The round winner gets the next turn.
         currentPlayerTurn = roundWinner;
 
-        return roundWinner;
+        return new RoundResult(roundWinner, statValues);
     }
 
     /**
