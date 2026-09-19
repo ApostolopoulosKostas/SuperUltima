@@ -124,11 +124,37 @@ public class MainActivity extends AppCompatActivity {
         Button rulesButton = findViewById(R.id.rulesButton);
         rulesButton.setOnClickListener(v -> {
             new AlertDialog.Builder(MainActivity.this)
-                    .setTitle("GAME RULES")
+                    .setTitle("SUPER ULTIMA - RULES")
                     .setMessage(
-                            "1. Select a stat from your active card.\n" +
-                                    "2. The player with the highest stat value wins the round.\n" +
-                                    "3. Collect all cards in the deck to win!"
+                            "OBJECTIVE\n\n" +
+                                    "The objective is to win more quartets.\n\n" +
+
+                                    "SETUP\n\n" +
+                                    "• The cards are dealt among the players.\n" +
+                                    "• Each player places their cards face down in a pile, one card on top of another.\n" +
+                                    "• Players only look at the top card of their pile.\n\n" +
+
+                                    "HOW TO PLAY\n\n" +
+                                    "1. The player immediately after the dealer starts the round.\n" +
+                                    "2. The starting player looks at the characteristics of their top card.\n" +
+                                    "3. They choose one characteristic that they believe has the best value compared with the other players' cards.\n" +
+                                    "4. All players reveal their top card and compare the chosen characteristic.\n" +
+                                    "5. The player with the best value wins all the cards in the round.\n" +
+                                    "6. The winner places the cards they won at the bottom of their pile.\n" +
+                                    "7. The winner then chooses the characteristic for the next round.\n\n" +
+
+                                    "SUPERULTIMA\n\n" +
+                                    "• The SuperUltima wins against all other cards.\n" +
+                                    "• However, when the cards are A1, B1, C1, etc., the SuperUltima does not automatically win. The chosen characteristic must be compared normally.\n\n" +
+
+                                    "TIES\n\n" +
+                                    "• If two or more cards have the same value for the chosen characteristic, all the cards remain in the center.\n" +
+                                    "• The next round is played normally.\n" +
+                                    "• The winner of the next round wins all the cards that have accumulated in the center.\n\n" +
+
+                                    "WINNING THE GAME\n\n" +
+                                    "The game continues until a player has collected the most quartets.\n\n" +
+                                    "That player is the winner."
                     )
                     .setPositiveButton("OK", null)
                     .show();

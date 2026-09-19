@@ -88,7 +88,7 @@ public class CardActivity extends AppCompatActivity {
 
         cards = (List<CardInfo>) getIntent().getSerializableExtra("deck");
         readMoreButton.setOnClickListener(v -> {
-            String url = "https://www.google.com/search?q="
+            String url = "https://en.wikipedia.org/w/index.php?search="
                     + Uri.encode(cards.get(currentCard).name);
 
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
