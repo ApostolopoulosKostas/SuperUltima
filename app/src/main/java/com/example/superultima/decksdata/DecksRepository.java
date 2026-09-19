@@ -6,6 +6,7 @@ import com.example.superultima.decks.CinemaCars;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.superultima.decks.MythicalGods;
 import com.example.superultima.decks.MythicalHeroes;
 import com.example.superultima.decks.MythicalMonsters;
 import com.example.superultima.decks.TanksDeck;
@@ -52,6 +53,13 @@ public class DecksRepository {
                 R.drawable.mythicalheroes_a1,
                 new MythicalHeroes().getCards()
         ));
+
+        decks.add(new DeckInfo(
+                "Mythical Gods",
+                R.drawable.gods_a1,
+                new MythicalGods().getCards()
+        ));
+
 
 
 

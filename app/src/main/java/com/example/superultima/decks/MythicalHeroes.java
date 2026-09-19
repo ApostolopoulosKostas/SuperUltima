@@ -21,7 +21,7 @@ public class MythicalHeroes {
         CardInfo a1 = new CardInfo(
                 "A1",
                 "Achilles",
-                "HERO",
+                "GREEK HERO",
                 R.drawable.mythicalheroes_a1,
                 'A',
                 1,
@@ -41,7 +41,7 @@ public class MythicalHeroes {
         CardInfo a2 = new CardInfo(
                 "A2",
                 "Hercules",
-                "HERO",
+                "GREEK HERO",
                 R.drawable.mythicalheroes_a2,
                 'A',
                 2,
@@ -61,7 +61,7 @@ public class MythicalHeroes {
         CardInfo a3 = new CardInfo(
                 "A3",
                 "Perseus",
-                "HERO",
+                "GREEK HERO",
                 R.drawable.mythicalheroes_a3,
                 'A',
                 3,
@@ -81,7 +81,7 @@ public class MythicalHeroes {
         CardInfo a4 = new CardInfo(
                 "A4",
                 "Odysseus",
-                "HERO",
+                "GREEK HERO",
                 R.drawable.mythicalheroes_a4,
                 'A',
                 4,
@@ -106,7 +106,7 @@ public class MythicalHeroes {
         CardInfo b1 = new CardInfo(
                 "B1",
                 "Theseus",
-                "HERO",
+                "GREEK HERO",
                 R.drawable.mythicalheroes_b1,
                 'B',
                 1,
@@ -126,7 +126,7 @@ public class MythicalHeroes {
         CardInfo b2 = new CardInfo(
                 "B2",
                 "Jason",
-                "HERO",
+                "GREEK HERO",
                 R.drawable.mythicalheroes_b2,
                 'B',
                 2,
@@ -146,7 +146,7 @@ public class MythicalHeroes {
         CardInfo b3 = new CardInfo(
                 "B3",
                 "Hippolyta",
-                "HERO",
+                "GREEK HERO",
                 R.drawable.mythicalheroes_b3,
                 'B',
                 3,
@@ -166,7 +166,7 @@ public class MythicalHeroes {
         CardInfo b4 = new CardInfo(
                 "B4",
                 "Atalanta",
-                "HERO",
+                "GREEK HERO",
                 R.drawable.mythicalheroes_b4,
                 'B',
                 4,
@@ -191,7 +191,7 @@ public class MythicalHeroes {
         CardInfo c1 = new CardInfo(
                 "C1",
                 "Bellerophon",
-                "HERO",
+                "GREEK HERO",
                 R.drawable.mythicalheroes_c1,
                 'C',
                 1,
@@ -211,7 +211,7 @@ public class MythicalHeroes {
         CardInfo c2 = new CardInfo(
                 "C2",
                 "Orpheus",
-                "HERO",
+                "GREEK HERO",
                 R.drawable.mythicalheroes_c2,
                 'C',
                 2,
@@ -231,7 +231,7 @@ public class MythicalHeroes {
         CardInfo c3 = new CardInfo(
                 "C3",
                 "Cadmus",
-                "HERO",
+                "GREEK HERO",
                 R.drawable.mythicalheroes_c3,
                 'C',
                 3,
@@ -251,7 +251,7 @@ public class MythicalHeroes {
         CardInfo c4 = new CardInfo(
                 "C4",
                 "Gilgamesh",
-                "HERO",
+                "MESOPOTAMIAN HERO",
                 R.drawable.mythicalheroes_c4,
                 'C',
                 4,
@@ -276,7 +276,7 @@ public class MythicalHeroes {
         CardInfo d1 = new CardInfo(
                 "D1",
                 "Rama",
-                "HERO",
+                "HINDU HERO",
                 R.drawable.mythicalheroes_d1,
                 'D',
                 1,
@@ -296,7 +296,7 @@ public class MythicalHeroes {
         CardInfo d2 = new CardInfo(
                 "D2",
                 "Sigurd",
-                "HERO",
+                "NORSE HERO",
                 R.drawable.mythicalheroes_d2,
                 'D',
                 2,
@@ -316,7 +316,7 @@ public class MythicalHeroes {
         CardInfo d3 = new CardInfo(
                 "D3",
                 "Beowulf",
-                "HERO",
+                "ANGLO-SAXON HERO",
                 R.drawable.mythicalheroes_d3,
                 'D',
                 3,
@@ -336,7 +336,7 @@ public class MythicalHeroes {
         CardInfo d4 = new CardInfo(
                 "D4",
                 "King Arthur",
-                "HERO",
+                "BRITISH HERO",
                 R.drawable.mythicalheroes_d4,
                 'D',
                 4,
@@ -361,7 +361,7 @@ public class MythicalHeroes {
         CardInfo e1 = new CardInfo(
                 "E1",
                 "Lancelot",
-                "HERO",
+                "BRITISH HERO",
                 R.drawable.mythicalheroes_e1,
                 'E',
                 1,
@@ -381,7 +381,7 @@ public class MythicalHeroes {
         CardInfo e2 = new CardInfo(
                 "E2",
                 "Cú Chulainn",
-                "HERO",
+                "IRISH HERO",
                 R.drawable.mythicalheroes_e2,
                 'E',
                 2,
@@ -401,7 +401,7 @@ public class MythicalHeroes {
         CardInfo e3 = new CardInfo(
                 "E3",
                 "Fionn mac Cumhaill",
-                "HERO",
+                "IRISH HERO",
                 R.drawable.mythicalheroes_e3,
                 'E',
                 3,
@@ -421,7 +421,7 @@ public class MythicalHeroes {
         CardInfo e4 = new CardInfo(
                 "E4",
                 "Mulan",
-                "HERO",
+                "CHINESE HERO",
                 R.drawable.mythicalheroes_e4,
                 'E',
                 4,
@@ -446,7 +446,7 @@ public class MythicalHeroes {
         CardInfo f1 = new CardInfo(
                 "F1",
                 "Sun Wukong",
-                "HERO",
+                "CHINESE HERO",
                 R.drawable.mythicalheroes_f1,
                 'F',
                 1,
@@ -466,7 +466,7 @@ public class MythicalHeroes {
         CardInfo f2 = new CardInfo(
                 "F2",
                 "Rustam",
-                "HERO",
+                "PERSIAN HERO",
                 R.drawable.mythicalheroes_f2,
                 'F',
                 2,
@@ -486,7 +486,7 @@ public class MythicalHeroes {
         CardInfo f3 = new CardInfo(
                 "F3",
                 "Arjuna",
-                "HERO",
+                "HINDU HERO",
                 R.drawable.mythicalheroes_f3,
                 'F',
                 3,
@@ -506,7 +506,7 @@ public class MythicalHeroes {
         CardInfo f4 = new CardInfo(
                 "F4",
                 "Yi the Archer",
-                "HERO",
+                "CHINESE HERO",
                 R.drawable.mythicalheroes_f4,
                 'F',
                 4,
@@ -531,7 +531,7 @@ public class MythicalHeroes {
         CardInfo g1 = new CardInfo(
                 "G1",
                 "Ragnar Lothbrok",
-                "HERO",
+                "NORSE HERO",
                 R.drawable.mythicalheroes_g1,
                 'G',
                 1,
@@ -551,7 +551,7 @@ public class MythicalHeroes {
         CardInfo g2 = new CardInfo(
                 "G2",
                 "Starkad",
-                "HERO",
+                "NORSE HERO",
                 R.drawable.mythicalheroes_g2,
                 'G',
                 2,
@@ -571,7 +571,7 @@ public class MythicalHeroes {
         CardInfo g3 = new CardInfo(
                 "G3",
                 "Amleth",
-                "HERO",
+                "DANISH HERO",
                 R.drawable.mythicalheroes_g3,
                 'G',
                 3,
@@ -591,7 +591,7 @@ public class MythicalHeroes {
         CardInfo g4 = new CardInfo(
                 "G4",
                 "Maui",
-                "HERO",
+                "POLYNESIAN HERO",
                 R.drawable.mythicalheroes_g4,
                 'G',
                 4,
@@ -616,7 +616,7 @@ public class MythicalHeroes {
         CardInfo h1 = new CardInfo(
                 "H1",
                 "Enkidu",
-                "HERO",
+                "MESOPOTAMIAN HERO",
                 R.drawable.mythicalheroes_h1,
                 'H',
                 1,
@@ -636,7 +636,7 @@ public class MythicalHeroes {
         CardInfo h2 = new CardInfo(
                 "H2",
                 "Meleager",
-                "HERO",
+                "GREEK HERO",
                 R.drawable.mythicalheroes_h2,
                 'H',
                 2,
@@ -656,7 +656,7 @@ public class MythicalHeroes {
         CardInfo h3 = new CardInfo(
                 "H3",
                 "Diomedes",
-                "HERO",
+                "GREEK HERO",
                 R.drawable.mythicalheroes_h3,
                 'H',
                 3,
@@ -676,7 +676,7 @@ public class MythicalHeroes {
         CardInfo h4 = new CardInfo(
                 "H4",
                 "Aeneas",
-                "HERO",
+                "GREEK HERO",
                 R.drawable.mythicalheroes_h4,
                 'H',
                 4,
