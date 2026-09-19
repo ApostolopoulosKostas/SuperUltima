@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -13,6 +12,9 @@ import androidx.core.view.WindowInsetsCompat;
 import android.view.View;
 import com.example.superultima.R;
 import java.util.List;
+import android.content.Intent;
+import android.net.Uri;
+
 
 /**
  * CardActivity is used to browse through a deck of cards.
@@ -40,6 +42,8 @@ public class CardActivity extends AppCompatActivity {
     private List<CardInfo> cards;
     private int currentCard = 0;
     private TextView superUltimaLabel;
+    private Button readMoreButton;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +61,7 @@ public class CardActivity extends AppCompatActivity {
         homeButton = findViewById(R.id.homeButton);
         prevButton = findViewById(R.id.prevButton);
         nextButton = findViewById(R.id.nextButton);
+        readMoreButton = findViewById(R.id.readMoreButton);
 
         cardCode = findViewById(R.id.cardCode);
         cardName = findViewById(R.id.cardName);
@@ -80,6 +85,15 @@ public class CardActivity extends AppCompatActivity {
 
         // Home button exits the browser and returns to the previous screen
         homeButton.setOnClickListener(v -> finish());
+
+        cards = (List<CardInfo>) getIntent().getSerializableExtra("deck");
+        readMoreButton.setOnClickListener(v -> {
+            String url = "https://www.google.com/search?q="
+                    + Uri.encode(cards.get(currentCard).name);
+
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            startActivity(intent);
+        });
 
         cards = (List<CardInfo>) getIntent().getSerializableExtra("deck");
 

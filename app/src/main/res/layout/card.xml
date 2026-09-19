@@ -98,6 +98,8 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent">
 
+
+
                 <!-- CARD IMAGE -->
                 <ImageView
                     android:id="@+id/cardImage"
@@ -105,6 +107,19 @@
                     android:layout_height="match_parent"
                     android:scaleType="fitXY"
                     android:src="@null"/>
+
+                <Button
+                    android:id="@+id/readMoreButton"
+                    android:layout_width="110dp"
+                    android:layout_height="38dp"
+                    android:layout_gravity="top|center_horizontal"
+                    android:layout_marginTop="8dp"
+                    android:text="READ MORE"
+                    android:textColor="#000000"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:backgroundTint="#FFD700"
+                    android:fontFamily="@font/pixeboy"/>
 
                 <!-- SUPER ULTIMA LABEL -->
                 <TextView
