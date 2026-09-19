@@ -123,8 +123,8 @@ public class TanksDeck {
             // B2
             CardInfo b2 = new CardInfo(
                     "B2",
+                    "Merkava Iv",
                     "Main Battle tank",
-                    "",
                     R.drawable.tanks_b2,
                     'B',
                     2,
@@ -681,12 +681,12 @@ public class TanksDeck {
                     false
             );
 
-            h4.addStatistic(0, "", 0, "");
-            h4.addStatistic(1, "", 0, "");
-            h4.addStatistic(2, "", 0, "");
-            h4.addStatistic(3, "", 0, "");
-            h4.addStatistic(4, "", 0, "");
-            h4.addStatistic(5, "", 0, "");
+            h4.addStatistic(0, "Weight", 036, "Tonnes");
+            h4.addStatistic(1, "Length", 9.48, "Meters(hull length)");
+            h4.addStatistic(2, "Height", 2.28, "Meters(to top)");
+            h4.addStatistic(3, "Power/Weight", 2.28, "Hp/Tonne");
+            h4.addStatistic(4, "Autonomy", 600, "km");
+            h4.addStatistic(5, "Speed", 100, "km/h");
 
             cards.add(h4);
         }

@@ -25,7 +25,7 @@ public class CinemaCars {
         );
 
         a1.addStatistic(0, "Speed", 220, "km/h");
-        a1.addStatistic(1, "Acceleration", 5.2, "0-100");
+        a1.addStatistic(1, "Acceleration", 5.2, "   0-100");
         a1.addStatistic(2, "Cubic Centimeters", 6.974, "cc");
         a1.addStatistic(3, "Horsepower", 425, "bhp");
         a1.addStatistic(4, "Premiere year", 1979, "year");
@@ -44,7 +44,7 @@ public class CinemaCars {
         );
 
         a2.addStatistic(0, "Speed", 210, "km/h");
-        a2.addStatistic(1, "Acceleration", 8.6, "0-100");
+        a2.addStatistic(1, "Acceleration", 8.6, "   0-100");
         a2.addStatistic(2, "Cubic Centimeters", 2.849, "cc");
         a2.addStatistic(3, "Horsepower", 145, "bhp");
         a2.addStatistic(4, "Premiere year", 1985, "year");
@@ -65,7 +65,7 @@ public class CinemaCars {
         );
 
         a3.addStatistic(0, "Speed", 201, "km/h");
-        a3.addStatistic(1, "Acceleration", 9.2, "0-100");
+        a3.addStatistic(1, "Acceleration", 9.2, "   0-100");
         a3.addStatistic(2, "Cubic Centimeters", 5.013, "cc");
         a3.addStatistic(3, "Horsepower", 192, "bhp");
         a3.addStatistic(4, "Premiere year", 1982, "year");
@@ -85,7 +85,7 @@ public class CinemaCars {
         );
 
         a4.addStatistic(0, "Speed", 193, "km/h");
-        a4.addStatistic(1, "Acceleration", 11.5, "0-100");
+        a4.addStatistic(1, "Acceleration", 11.5, "   0-100");
         a4.addStatistic(2, "Cubic Centimeters", 6.390, "cc");
         a4.addStatistic(3, "Horsepower", 325, "bhp");
         a4.addStatistic(4, "Premiere year", 1984, "year");
@@ -106,7 +106,7 @@ public class CinemaCars {
         );
 
         b1.addStatistic(0, "Speed", 290, "km/h");
-        b1.addStatistic(1, "Acceleration", 5.7, "0-100");
+        b1.addStatistic(1, "Acceleration", 5.7, "   0-100");
         b1.addStatistic(2, "Cubic Centimeters", 4.942, "cc");
         b1.addStatistic(3, "Horsepower", 390, "bhp");
         b1.addStatistic(4, "Premiere year", 1986, "year");
@@ -126,7 +126,7 @@ public class CinemaCars {
         );
 
         b2.addStatistic(0, "Speed", 200, "km/h");
-        b2.addStatistic(1, "Acceleration", 8.7, "0-100");
+        b2.addStatistic(1, "Acceleration", 8.7, "   0-100");
         b2.addStatistic(2, "Cubic Centimeters", 1.973, "cc");
         b2.addStatistic(3, "Horsepower", 156, "bhp");
         b2.addStatistic(4, "Premiere year", 1977, "year");
@@ -146,7 +146,7 @@ public class CinemaCars {
         );
 
         b3.addStatistic(0, "Speed", 126, "km/h");
-        b3.addStatistic(1, "Acceleration", 26.5, "0-100");
+        b3.addStatistic(1, "Acceleration", 26.5, "   0-100");
         b3.addStatistic(2, "Cubic Centimeters", 1.285, "cc");
         b3.addStatistic(3, "Horsepower", 43, "bhp");
         b3.addStatistic(4, "Premiere year", 1968, "year");
@@ -166,7 +166,7 @@ public class CinemaCars {
         );
 
         b4.addStatistic(0, "Speed", 196, "km/h");
-        b4.addStatistic(1, "Acceleration", 8.8, "0-100");
+        b4.addStatistic(1, "Acceleration", 8.8, "   0-100");
         b4.addStatistic(2, "Cubic Centimeters", 5.736, "cc");
         b4.addStatistic(3, "Horsepower", 305, "bhp");
         b4.addStatistic(4, "Premiere year", 1983, "year");
@@ -186,7 +186,7 @@ public class CinemaCars {
         );
 
         c1.addStatistic(0, "Speed", 252, "km/h");
-        c1.addStatistic(1, "Acceleration", 6.0, "0-100");
+        c1.addStatistic(1, "Acceleration", 6.0, "  0-100");
         c1.addStatistic(2, "Cubic Centimeters", 2.927, "cc");
         c1.addStatistic(3, "Horsepower", 224, "bhp");
         c1.addStatistic(4, "Premiere year", 1980, "year");
@@ -206,7 +206,7 @@ public class CinemaCars {
         );
 
         c2.addStatistic(0, "Speed", 249, "km/h");
-        c2.addStatistic(1, "Acceleration", 4.8, "0-100");
+        c2.addStatistic(1, "Acceleration", 4.8, "  0-100");
         c2.addStatistic(2, "Cubic Centimeters", 2.568, "cc");
         c2.addStatistic(3, "Horsepower", 276, "bhp");
         c2.addStatistic(4, "Premiere year", 2003, "year");
@@ -226,7 +226,7 @@ public class CinemaCars {
         );
 
         c3.addStatistic(0, "Speed", 205, "km/h");
-        c3.addStatistic(1, "Acceleration", 9.6, "0-100");
+        c3.addStatistic(1, "Acceleration", 9.6, "  0-100");
         c3.addStatistic(2, "Cubic Centimeters", 6.384, "cc");
         c3.addStatistic(3, "Horsepower", 315, "bhp");
         c3.addStatistic(4, "Premiere year", 1991, "year");
@@ -245,7 +245,7 @@ public class CinemaCars {
         );
 
         c4.addStatistic(0, "Speed", 183, "km/h");
-        c4.addStatistic(1, "Acceleration", 12, "0-100");
+        c4.addStatistic(1, "Acceleration", 12.0, "  0-100");
         c4.addStatistic(2, "Cubic Centimeters", 5.898, "cc");
         c4.addStatistic(3, "Horsepower", 180, "bhp");
         c4.addStatistic(4, "Premiere year", 1980, "year");
@@ -267,7 +267,7 @@ public class CinemaCars {
         );
 
         d1.addStatistic(0, "Speed", 230, "km/h");
-        d1.addStatistic(1, "Acceleration", 8.4, "0-100");
+        d1.addStatistic(1, "Acceleration", 8.4, "   0-100");
         d1.addStatistic(2, "Cubic Centimeters", 3.995, "cc");
         d1.addStatistic(3, "Horsepower", 286, "bhp");
         d1.addStatistic(4, "Premiere year", 1965, "year");
@@ -287,7 +287,7 @@ public class CinemaCars {
         );
 
         d2.addStatistic(0, "Speed", 230, "km/h");
-        d2.addStatistic(1, "Acceleration", 8.1, "0-100");
+        d2.addStatistic(1, "Acceleration", 8.1, "   0-100");
         d2.addStatistic(2, "Cubic Centimeters", 1.998, "cc");
         d2.addStatistic(3, "Horsepower", 162, "bhp");
         d2.addStatistic(4, "Premiere year", 2006, "year");
@@ -307,7 +307,7 @@ public class CinemaCars {
         );
 
         d3.addStatistic(0, "Speed", 176, "km/h");
-        d3.addStatistic(1, "Acceleration", 12.9, "0-100");
+        d3.addStatistic(1, "Acceleration", 12.9, "   0-100");
         d3.addStatistic(2, "Cubic Centimeters", 1.782, "cc");
         d3.addStatistic(3, "Horsepower", 103, "bhp");
         d3.addStatistic(4, "Premiere year", 1962, "year");
@@ -327,7 +327,7 @@ public class CinemaCars {
         );
 
         d4.addStatistic(0, "Speed", 133, "km/h");
-        d4.addStatistic(1, "Acceleration", 19.8, "0-100");
+        d4.addStatistic(1, "Acceleration", 19.8, "   0-100");
         d4.addStatistic(2, "Cubic Centimeters", 5.253, "cc");
         d4.addStatistic(3, "Horsepower", 110, "bhp");
         d4.addStatistic(4, "Premiere year", 1986, "year");
@@ -348,7 +348,7 @@ public class CinemaCars {
         );
 
         e1.addStatistic(0, "Speed", 317, "km/h");
-        e1.addStatistic(1, "Acceleration", 3.8, "0-100");
+        e1.addStatistic(1, "Acceleration", 3.8, "   0-100");
         e1.addStatistic(2, "Cubic Centimeters", 5.204, "cc");
         e1.addStatistic(3, "Horsepower", 560, "bhp");
         e1.addStatistic(4, "Premiere year", 2010, "year");
@@ -367,7 +367,7 @@ public class CinemaCars {
         );
 
         e2.addStatistic(0, "Speed", 230, "km/h");
-        e2.addStatistic(1, "Acceleration", 7.5, "0-100");
+        e2.addStatistic(1, "Acceleration", 7.5, "   0-100");
         e2.addStatistic(2, "Cubic Centimeters", 4.474, "cc");
         e2.addStatistic(3, "Horsepower", 219, "bhp");
         e2.addStatistic(4, "Premiere year", 1983, "year");
@@ -386,7 +386,7 @@ public class CinemaCars {
         );
 
         e3.addStatistic(0, "Speed", 185, "km/h");
-        e3.addStatistic(1, "Acceleration", 10.3, "0-100");
+        e3.addStatistic(1, "Acceleration", 10.3, "   0-100");
         e3.addStatistic(2, "Cubic Centimeters", 1.570, "cc");
         e3.addStatistic(3, "Horsepower", 125, "bhp");
         e3.addStatistic(4, "Premiere year", 1967, "year");
@@ -405,7 +405,7 @@ public class CinemaCars {
         );
 
         e4.addStatistic(0, "Speed", 207, "km/h");
-        e4.addStatistic(1, "Acceleration", 6.0, "0-100");
+        e4.addStatistic(1, "Acceleration", 6.0, "   0-100");
         e4.addStatistic(2, "Cubic Centimeters", 6.997, "cc");
         e4.addStatistic(3, "Horsepower", 335, "bhp");
         e4.addStatistic(4, "Premiere year", 2000, "year");
@@ -425,7 +425,7 @@ public class CinemaCars {
         );
 
         f1.addStatistic(0, "Speed", 249, "km/h");
-        f1.addStatistic(1, "Acceleration", 5.1, "0-100");
+        f1.addStatistic(1, "Acceleration", 5.1, "   0-100");
         f1.addStatistic(2, "Cubic Centimeters", 6.162, "cc");
         f1.addStatistic(3, "Horsepower", 431, "bhp");
         f1.addStatistic(4, "Premiere year", 2007, "year");
@@ -444,7 +444,7 @@ public class CinemaCars {
         );
 
         f2.addStatistic(0, "Speed", 420, "km/h");
-        f2.addStatistic(1, "Acceleration", 2.8, "0-100");
+        f2.addStatistic(1, "Acceleration", 2.8, "   0-100");
         f2.addStatistic(2, "Cubic Centimeters", 5.032, "cc");
         f2.addStatistic(3, "Horsepower", 1140, "bhp");
         f2.addStatistic(4, "Premiere year", 2013, "year");
@@ -463,7 +463,7 @@ public class CinemaCars {
         );
 
         f3.addStatistic(0, "Speed", 204, "km/h");
-        f3.addStatistic(1, "Acceleration", 6.5, "0-100");
+        f3.addStatistic(1, "Acceleration", 6.5, "   0-100");
         f3.addStatistic(2, "Cubic Centimeters", 5.776, "cc");
         f3.addStatistic(3, "Horsepower", 243, "bhp");
         f3.addStatistic(4, "Premiere year", 1974, "year");
@@ -482,7 +482,7 @@ public class CinemaCars {
         );
 
         f4.addStatistic(0, "Speed", 195, "km/h");
-        f4.addStatistic(1, "Acceleration", 10.3, "0-100");
+        f4.addStatistic(1, "Acceleration", 10.3, "   0-100");
         f4.addStatistic(2, "Cubic Centimeters", 5.786, "cc");
         f4.addStatistic(3, "Horsepower", 350, "bhp");
         f4.addStatistic(4, "Premiere year", 2011, "year");
@@ -502,7 +502,7 @@ public class CinemaCars {
         );
 
         g1.addStatistic(0, "Speed", 307, "km/h");
-        g1.addStatistic(1, "Acceleration", 4.3, "0-100");
+        g1.addStatistic(1, "Acceleration", 4.3, "   0-100");
         g1.addStatistic(2, "Cubic Centimeters", 5.935, "cc");
         g1.addStatistic(3, "Horsepower", 617, "bhp");
         g1.addStatistic(4, "Premiere year", 2006, "year");
@@ -521,9 +521,9 @@ public class CinemaCars {
         );
 
         g2.addStatistic(0, "Speed", 250, "km/h");
-        g2.addStatistic(1, "Acceleration", 5.0, "0-100");
-        g2.addStatistic(2, "Cubic Centimeters", 5.0, "cc");
-        g2.addStatistic(3, "Horsepower", 5.998, "bhp");
+        g2.addStatistic(1, "Acceleration", 5.0, "   0-100");
+        g2.addStatistic(2, "Cubic Centimeters", 5.998, "cc");
+        g2.addStatistic(3, "Horsepower", 450, "bhp");
         g2.addStatistic(4, "Premiere year", 2005, "year");
         g2.addStatistic(5, "Εngine Τorque", 610, "nm");
 
@@ -540,7 +540,7 @@ public class CinemaCars {
         );
 
         g3.addStatistic(0, "Speed", 200, "km/h");
-        g3.addStatistic(1, "Acceleration", 6.5, "0-100");
+        g3.addStatistic(1, "Acceleration", 6.5, "   0-100");
         g3.addStatistic(2, "Cubic Centimeters", 6.590, "cc");
         g3.addStatistic(3, "Horsepower", 375, "bhp");
         g3.addStatistic(4, "Premiere year", 2007, "year");
@@ -559,7 +559,7 @@ public class CinemaCars {
         );
 
         g4.addStatistic(0, "Speed", 250, "km/h");
-        g4.addStatistic(1, "Acceleration", 5.7, "0-100");
+        g4.addStatistic(1, "Acceleration", 5.7, "   0-100");
         g4.addStatistic(2, "Cubic Centimeters", 1.308, "cc");
         g4.addStatistic(3, "Horsepower", 255, "bhp");
         g4.addStatistic(4, "Premiere year", 2001, "year");
@@ -579,7 +579,7 @@ public class CinemaCars {
         );
 
         h1.addStatistic(0, "Speed", 354, "km/h");
-        h1.addStatistic(1, "Acceleration", 1.9, "0-100");
+        h1.addStatistic(1, "Acceleration", 1.9, "   0-100");
         h1.addStatistic(2, "Cubic Centimeters", 4.907, "cc");
         h1.addStatistic(3, "Horsepower", 600, "bhp");
         h1.addStatistic(4, "Premiere year", 1971, "year");
@@ -598,7 +598,7 @@ public class CinemaCars {
         );
 
         h2.addStatistic(0, "Speed", 194, "km/h");
-        h2.addStatistic(1, "Acceleration", 6.5, "0-100");
+        h2.addStatistic(1, "Acceleration", 6.5, "   0-100");
         h2.addStatistic(2, "Cubic Centimeters", 6.384, "cc");
         h2.addStatistic(3, "Horsepower", 325, "bhp");
         h2.addStatistic(4, "Premiere year", 1968, "year");
@@ -617,7 +617,7 @@ public class CinemaCars {
         );
 
         h3.addStatistic(0, "Speed", 273, "km/h");
-        h3.addStatistic(1, "Acceleration", 5.8, "0-100");
+        h3.addStatistic(1, "Acceleration", 5.8, "   0-100");
         h3.addStatistic(2, "Cubic Centimeters", 4.754, "cc");
         h3.addStatistic(3, "Horsepower", 575, "bhp");
         h3.addStatistic(4, "Premiere year", 1984, "year");
@@ -636,7 +636,7 @@ public class CinemaCars {
         );
 
         h4.addStatistic(0, "Speed", 145, "km/h");
-        h4.addStatistic(1, "Acceleration", 15.1, "0-100");
+        h4.addStatistic(1, "Acceleration", 15.1, "   0-100");
         h4.addStatistic(2, "Cubic Centimeters", 1.290, "cc");
         h4.addStatistic(3, "Horsepower", 59, "bhp");
         h4.addStatistic(4, "Premiere year", 2013, "year");
