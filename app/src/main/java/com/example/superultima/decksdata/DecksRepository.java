@@ -50,4 +50,20 @@ public class DecksRepository {
         return decks;
     }
 
+    /**
+     * Finds a deck's card list by its display name (as sent over the network
+     * at multiplayer game start). Used so a guest device can rebuild the
+     * SAME deck locally, instead of the host sending the actual card data.
+     * @param name The deck's display name (e.g. "AIRPLANES").
+     * @return The matching deck's cards, or an empty list if no deck matches.
+     */
+    public static List<com.example.superultima.cardgame.CardInfo> getDeckCardsByName(String name) {
+        for (DeckInfo deck : getDecks()) {
+            if (deck.name.equals(name)) {
+                return deck.cards;
+            }
+        }
+        return new ArrayList<>();
+    }
+
 }

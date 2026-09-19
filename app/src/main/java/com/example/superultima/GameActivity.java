@@ -125,15 +125,14 @@ public class GameActivity extends AppCompatActivity {
         if (nextButton != null) nextButton.setVisibility(View.GONE);
 
         // 7. Bind UI Stat components and click listeners.
-        for (int i = 0; i < 6; i++) {
-            // Find IDs dynamically by name (e.g., statCard1, label1, value1).
-            int cardId = getResources().getIdentifier("statCard" + (i + 1), "id", getPackageName());
-            int labelId = getResources().getIdentifier("label" + (i + 1), "id", getPackageName());
-            int valueId = getResources().getIdentifier("value" + (i + 1), "id", getPackageName());
+        int[] statCardIds = { R.id.statCard1, R.id.statCard2, R.id.statCard3, R.id.statCard4, R.id.statCard5, R.id.statCard6 };
+        int[] labelIds = { R.id.label1, R.id.label2, R.id.label3, R.id.label4, R.id.label5, R.id.label6 };
+        int[] valueIds = { R.id.value1, R.id.value2, R.id.value3, R.id.value4, R.id.value5, R.id.value6 };
 
-            statCards[i] = findViewById(cardId);
-            labelViews[i] = findViewById(labelId);
-            valueViews[i] = findViewById(valueId);
+        for (int i = 0; i < 6; i++) {
+            statCards[i] = findViewById(statCardIds[i]);
+            labelViews[i] = findViewById(labelIds[i]);
+            valueViews[i] = findViewById(valueIds[i]);
 
             final int index = i;
 

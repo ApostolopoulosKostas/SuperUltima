@@ -267,15 +267,15 @@ public class GameSetupActivity extends AppCompatActivity {
 
         btn2Players.setBackgroundTintList(ColorStateList.valueOf(selectedPlayerCount == 2 ? yellow : darkBg));
         btn2Players.setTextColor(selectedPlayerCount == 2 ? Color.BLACK : Color.WHITE);
-        
+
         btn3Players.setBackgroundTintList(ColorStateList.valueOf(selectedPlayerCount == 3 ? yellow : darkBg));
         btn3Players.setTextColor(selectedPlayerCount == 3 ? Color.BLACK : Color.WHITE);
-        
+
         btn4Players.setBackgroundTintList(ColorStateList.valueOf(selectedPlayerCount == 4 ? yellow : darkBg));
         btn4Players.setTextColor(selectedPlayerCount == 4 ? Color.BLACK : Color.WHITE);
     }
 
-    /** 
+    /**
      * Handles the logic for the primary action button (Start, Wait, or Search).
      * The behavior depends on whether the user is playing against a bot, hosting, or joining.
      */
@@ -316,8 +316,14 @@ public class GameSetupActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onGameStarted(String deckName, Game sharedGame) {
-                runOnUiThread(() -> openGame(sharedGame, selectedPlayerCount, false));
+            public void onGameStarted(String deckName, int playerCount, long shuffleSeed) {
+                // Look up the SAME deck locally by name (every device ships
+                // with the same deck data built in), then rebuild the exact
+                // same shuffled game using the shared seed. No card data
+                // ever crosses the network.
+                List<CardInfo> deckCards = DecksRepository.getDeckCardsByName(deckName);
+                Game rebuiltGame = new Game(playerCount, deckCards, shuffleSeed);
+                runOnUiThread(() -> openGame(rebuiltGame, playerCount, false));
             }
         };
 
@@ -341,7 +347,7 @@ public class GameSetupActivity extends AppCompatActivity {
         }
     }
 
-    /** 
+    /**
      * Final step for the host: creates the game object and broadcasts it to all connected peers.
      */
     private void startHostGame() {
@@ -349,10 +355,14 @@ public class GameSetupActivity extends AppCompatActivity {
         if (connection == null) return;
 
         String deckName = deckSpinner.getSelectedItem().toString();
-        
-        // Game object is created once on the host and shared to ensure all players have the same deck state.
-        Game sharedGame = new Game(selectedPlayerCount, selectedDeckCards);
-        connection.startGame(deckName, sharedGame);
+
+        // Pick one shuffle seed and use it for BOTH the host's own game and
+        // the message sent to guests. Every device rebuilds the same
+        // shuffled deck locally from this single number - no card data is
+        // ever sent over the network.
+        long shuffleSeed = new java.util.Random().nextLong();
+        Game sharedGame = new Game(selectedPlayerCount, selectedDeckCards, shuffleSeed);
+        connection.startGame(deckName, selectedPlayerCount, shuffleSeed);
         connection.stopAdvertising();
 
         openGame(sharedGame, selectedPlayerCount, false);

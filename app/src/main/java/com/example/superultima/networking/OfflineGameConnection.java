@@ -2,7 +2,6 @@ package com.example.superultima.networking;
 
 import android.content.Context;
 
-import com.example.superultima.cardgame.Game;
 import com.example.superultima.GameStartData;
 import com.google.android.gms.nearby.Nearby;
 import com.google.android.gms.nearby.connection.AdvertisingOptions;
@@ -29,7 +28,7 @@ import java.util.Set;
 
 /**
  * Manages the offline multiplayer connections using Google Nearby Connections API.
- * This class handles device discovery, advertising, connection management, 
+ * This class handles device discovery, advertising, connection management,
  * and data synchronization (moves, game start, round transitions).
  */
 public class OfflineGameConnection {
@@ -75,8 +74,12 @@ public class OfflineGameConnection {
         /** Called when a nearby game is discovered. */
         default void onGameFound() {}
 
-        /** Called when the host starts the game with a specific deck and state. */
-        default void onGameStarted(String deckName, Game game) {}
+        /**
+         * Called when the host starts the game. Only the deck name, player
+         * count, and shuffle seed are sent - never the actual cards - so
+         * each device builds its own identical Game locally.
+         */
+        default void onGameStarted(String deckName, int playerCount, long shuffleSeed) {}
 
         /** Called when a connection attempt fails. */
         default void onConnectionFailed() {}
@@ -131,7 +134,7 @@ public class OfflineGameConnection {
                     if (object instanceof GameStartData) {
                         GameStartData data = (GameStartData) object;
                         if (OfflineGameConnection.this.listener != null) {
-                            OfflineGameConnection.this.listener.onGameStarted(data.deckName, data.game);
+                            OfflineGameConnection.this.listener.onGameStarted(data.deckName, data.playerCount, data.shuffleSeed);
                         }
                         return;
                     }
@@ -249,10 +252,13 @@ public class OfflineGameConnection {
     }
 
     /**
-     * Broadcasts the game start signal and shared game state to all connected guests.
+     * Broadcasts the game start signal to all connected guests. Sends only
+     * the deck name, player count, and shuffle seed - never any card data -
+     * so guests build the identical deck locally instead of receiving
+     * anyone's hand over the network.
      */
-    public void startGame(String deckName, Game game) {
-        GameStartData data = new GameStartData(deckName, game);
+    public void startGame(String deckName, int playerCount, long shuffleSeed) {
+        GameStartData data = new GameStartData(deckName, playerCount, shuffleSeed);
         try {
             ByteArrayOutputStream output = new ByteArrayOutputStream();
             ObjectOutputStream objectOutput = new ObjectOutputStream(output);

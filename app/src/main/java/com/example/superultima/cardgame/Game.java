@@ -56,10 +56,27 @@ public class Game implements Serializable {
 
     /**
      * Initializes a new game, shuffles the deck, and deals cards to all players.
+     * The shuffle order is random (not reproducible) - use this for single-device
+     * modes (bot mode, pass & play).
      * @param playerCount Total players (2-4).
      * @param fullDeck The complete list of cards to be used.
      */
     public Game(int playerCount, List<CardInfo> fullDeck) {
+        this(playerCount, fullDeck, new java.util.Random().nextLong());
+    }
+
+    /**
+     * Initializes a new game using a specific shuffle seed, so that two
+     * devices holding the same deck data can each build an IDENTICAL
+     * shuffled/dealt game locally, without ever sending card data between
+     * them. Used for nearby multiplayer: the host picks a random seed and
+     * sends just that number to the guest; both sides call this constructor
+     * with the same seed and end up with the same game state.
+     * @param playerCount Total players (2-4).
+     * @param fullDeck The complete list of cards to be used.
+     * @param shuffleSeed The seed used to shuffle the deck.
+     */
+    public Game(int playerCount, List<CardInfo> fullDeck, long shuffleSeed) {
         this.playerCount = playerCount;
         this.playerDecks = new ArrayList<>();
 
@@ -68,9 +85,10 @@ public class Game implements Serializable {
             playerDecks.add(new ArrayList<>());
         }
 
-        // Shuffle the starting deck to ensure randomness.
+        // Shuffle the starting deck using the given seed, so the same seed
+        // always produces the same shuffle order.
         List<CardInfo> shuffledDeck = new ArrayList<>(fullDeck);
-        Collections.shuffle(shuffledDeck);
+        Collections.shuffle(shuffledDeck, new java.util.Random(shuffleSeed));
 
         // Distribute cards evenly among players.
         for (int i = 0; i < shuffledDeck.size(); i++) {
