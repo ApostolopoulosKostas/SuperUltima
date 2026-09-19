@@ -8,10 +8,22 @@
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
     <uses-permission android:name="android.permission.NEARBY_WIFI_DEVICES" android:usesPermissionFlags="neverForLocation" />
+
+    <!-- Location permission is required by Android for Wi-Fi-based nearby
+         device discovery (used by Nearby Connections for multiplayer),
+         even though BLUETOOTH_SCAN and NEARBY_WIFI_DEVICES above are marked
+         neverForLocation. This app does not read or store the user's
+         actual location. -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+
+    <!-- Nearby multiplayer needs BLE, but the app should still install and
+         run (bot mode, pass & play) on devices without it. -->
+    <uses-feature
+        android:name="android.hardware.bluetooth_le"
+        android:required="false" />
 
     <application
         android:allowBackup="true"
