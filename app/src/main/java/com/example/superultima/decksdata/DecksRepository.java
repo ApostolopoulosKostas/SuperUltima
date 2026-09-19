@@ -5,6 +5,8 @@ import com.example.superultima.decks.AirplanesDeck;
 import com.example.superultima.decks.CinemaCars;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.example.superultima.decks.MythicalHeroes;
 import com.example.superultima.decks.MythicalMonsters;
 import com.example.superultima.decks.TanksDeck;
 import com.example.superultima.decks.WarShips;
@@ -34,16 +36,23 @@ public class DecksRepository {
         ));
 
         decks.add(new DeckInfo(
-                "Tanks",
+                "TANKS",
                 R.drawable.tanks_a1,
                 new TanksDeck().getCards()
         ));
 
         decks.add(new DeckInfo(
-                "Warships",
+                "WARSHIPS",
                 R.drawable.warships_a1,
                 new WarShips().getCards()
         ));
+
+        decks.add(new DeckInfo(
+                "Mythical Heroes",
+                R.drawable.mythicalheroes_a1,
+                new MythicalHeroes().getCards()
+        ));
+
 
 
 

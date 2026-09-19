@@ -241,9 +241,9 @@ public class MythicalMonsters {
         c3.addStatistic(0, "STRENGTH", 100, "STR");
         c3.addStatistic(1, "SPEED", 75, "km/h");
         c3.addStatistic(2, "MASS", 98, "kg");
-        c3.addStatistic(3, "DURABILITY", 100, "HP");
-        c3.addStatistic(4, "INTELLIGENCE", 90, "IQ");
-        c3.addStatistic(5, "MAGIC POWER", 100, "MP");
+        c3.addStatistic(3, "DURABILITY", 50, "HP");
+        c3.addStatistic(4, "INTELLIGENCE", 70, "IQ");
+        c3.addStatistic(5, "MAGIC POWER", 20, "MP");
 
         cards.add(c3);
 
@@ -283,7 +283,7 @@ public class MythicalMonsters {
                 false
         );
 
-        d1.addStatistic(0, "STRENGTH", 65, "STR");
+        d1.addStatistic(0, "STRENGTH", 45, "STR");
         d1.addStatistic(1, "SPEED", 95, "km/h");
         d1.addStatistic(2, "MASS", 55, "kg");
         d1.addStatistic(3, "DURABILITY", 100, "HP");
@@ -516,8 +516,8 @@ public class MythicalMonsters {
         f4.addStatistic(0, "STRENGTH", 100, "STR");
         f4.addStatistic(1, "SPEED", 65, "km/h");
         f4.addStatistic(2, "MASS", 100, "kg");
-        f4.addStatistic(3, "DURABILITY", 100, "HP");
-        f4.addStatistic(4, "INTELLIGENCE", 75, "IQ");
+        f4.addStatistic(3, "DURABILITY", 40, "HP");
+        f4.addStatistic(4, "INTELLIGENCE", 65, "IQ");
         f4.addStatistic(5, "MAGIC POWER", 98, "MP");
 
         cards.add(f4);
@@ -578,7 +578,7 @@ public class MythicalMonsters {
                 false
         );
 
-        g3.addStatistic(0, "STRENGTH", 96, "STR");
+        g3.addStatistic(0, "STRENGTH", 55, "STR");
         g3.addStatistic(1, "SPEED", 50, "km/h");
         g3.addStatistic(2, "MASS", 100, "kg");
         g3.addStatistic(3, "DURABILITY", 98, "HP");
@@ -627,8 +627,8 @@ public class MythicalMonsters {
         h1.addStatistic(1, "SPEED", 45, "km/h");
         h1.addStatistic(2, "MASS", 100, "kg");
         h1.addStatistic(3, "DURABILITY", 100, "HP");
-        h1.addStatistic(4, "INTELLIGENCE", 80, "IQ");
-        h1.addStatistic(5, "MAGIC POWER", 98, "MP");
+        h1.addStatistic(4, "INTELLIGENCE", 30, "IQ");
+        h1.addStatistic(5, "MAGIC POWER", 35, "MP");
 
         cards.add(h1);
 
