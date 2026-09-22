@@ -1,11 +1,17 @@
 package com.example.superultima;
 
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.os.Bundle;
 import android.os.Looper;
 import android.util.Log;
 import android.view.View;
+import android.view.Gravity;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -39,9 +45,6 @@ public class GameActivity extends AppCompatActivity {
      */
     private int localPlayerId = 0;
 
-    /** Tracks the currently open round result dialog so it can be dismissed programmatically. */
-    private AlertDialog activeResultDialog;
-
     /** UI containers for the 6 selectable statistics. */
     private MaterialCardView[] statCards = new MaterialCardView[6];
 
@@ -66,6 +69,26 @@ public class GameActivity extends AppCompatActivity {
      * reference around to know the stat's label/unit for the result dialog.
      */
     private CardInfo lastDisplayedCard;
+
+    // ---- Round result overlay (replaces the old AlertDialog for the common
+    // 2-player case: bot mode and 1v1 nearby multiplayer) ----
+
+    private FrameLayout roundResultOverlay;
+    private TextView vsPulseText;
+    private LinearLayout resultRevealGroup;
+    private TextView resultBanner;
+    private TextView resultStatLabel;
+    private LinearLayout resultValuesList;
+    private TextView continuePrompt;
+
+    /** Animates the "VS" suspense beat before the result reveals. */
+    private ObjectAnimator pulseAnimator;
+
+    /** True once the result has finished revealing (so taps before that are ignored). */
+    private boolean resultRevealed = false;
+
+    /** What happens when the player taps the overlay after the result is revealed. */
+    private Runnable pendingOverlayContinueAction;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,8 +132,8 @@ public class GameActivity extends AppCompatActivity {
 
                 @Override
                 public void onNextRoundReceived() {
-                    // Receive confirmation to proceed to the next turn display.
-                    runOnUiThread(() -> advanceToNextRound());
+                    // The other player tapped continue - hide our own overlay too and advance.
+                    runOnUiThread(() -> hideOverlayAndAdvance());
                 }
             });
         }
@@ -119,10 +142,12 @@ public class GameActivity extends AppCompatActivity {
         View prevButton = findViewById(R.id.prevButton);
         View homeButton = findViewById(R.id.homeButton);
         View nextButton = findViewById(R.id.nextButton);
+        View readMoreButton = findViewById(R.id.readMoreButton);
 
         if (prevButton != null) prevButton.setVisibility(View.GONE);
         if (homeButton != null) homeButton.setVisibility(View.GONE);
         if (nextButton != null) nextButton.setVisibility(View.GONE);
+        if (readMoreButton != null) readMoreButton.setVisibility(View.GONE);
 
         // 7. Bind UI Stat components and click listeners.
         int[] statCardIds = { R.id.statCard1, R.id.statCard2, R.id.statCard3, R.id.statCard4, R.id.statCard5, R.id.statCard6 };
@@ -149,6 +174,27 @@ public class GameActivity extends AppCompatActivity {
         // 8. Load Initial State.
         displayCurrentCard();
         updateTurnUI();
+
+        // 9. Set up the round result overlay (haptics + visuals).
+
+        bindResultOverlayViews();
+    }
+
+
+
+    /** Finds the round result overlay's views and wires up the tap-to-continue behavior. */
+    private void bindResultOverlayViews() {
+        roundResultOverlay = findViewById(R.id.roundResultOverlay);
+        vsPulseText = findViewById(R.id.vsPulseText);
+        resultRevealGroup = findViewById(R.id.resultRevealGroup);
+        resultBanner = findViewById(R.id.resultBanner);
+        resultStatLabel = findViewById(R.id.resultStatLabel);
+        resultValuesList = findViewById(R.id.resultValuesList);
+        continuePrompt = findViewById(R.id.continuePrompt);
+
+        if (roundResultOverlay != null) {
+            roundResultOverlay.setOnClickListener(v -> onResultOverlayTapped());
+        }
     }
 
     // =================================================
@@ -162,6 +208,8 @@ public class GameActivity extends AppCompatActivity {
     private boolean isMyTurn() {
         return game.getCurrentPlayerTurn() == localPlayerId;
     }
+
+
 
     /**
      * Updates UI interactivity based on turn status.
@@ -192,7 +240,7 @@ public class GameActivity extends AppCompatActivity {
     private void selectStatistic(int statisticPosition) {
         if (!isMyTurn()) return;
 
-        disableStatCards();
+
 
         // Broadcast the choice to the remote player if in multiplayer.
         if (connection != null && !isBotMode) {
@@ -226,56 +274,172 @@ public class GameActivity extends AppCompatActivity {
         // Perform the round logic comparison.
         Game.RoundResult result = game.playRound(statisticPosition);
 
-        // Build the "PLAYER: value unit" breakdown shown for every round.
-        String comparisonText = buildComparisonText(statLabel, statUnit, result.statValues);
-
         // Check for overall Game Over.
         if (game.isGameOver()) {
             int overallWinner = game.getWinner();
+            String comparisonText = buildComparisonText(statLabel, statUnit, result.statValues);
+            String outcome = (overallWinner == localPlayerId) ? "YOU WIN THE GAME!" : "GAME OVER - YOU LOSE.";
             new AlertDialog.Builder(GameActivity.this)
                     .setTitle("GAME OVER")
-                    .setMessage(comparisonText + "\n\nPlayer " + (overallWinner + 1) + " wins the game!")
+                    .setMessage(comparisonText + "\n\n" + outcome)
                     .setCancelable(false)
                     .setPositiveButton("FINISH", (dialog, which) -> finish())
                     .show();
             return;
         }
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(GameActivity.this)
-                .setTitle(result.isTie() ? "IT'S A TIE!" : "ROUND RESULT")
-                .setCancelable(false);
-
-        String outcomeLine = result.isTie()
-                ? "\n\nNo one wins this round - the cards carry over to the next one!"
-                : "\n\nPlayer " + (result.winnerIndex + 1) + " won this round!";
-
         // After a tie, the SAME player who picked continues to pick next.
         // After a win, the winner picks next. Either way, check if that's the CPU.
         int nextPicker = result.isTie() ? game.getCurrentPlayerTurn() : result.winnerIndex;
         boolean cpuContinues = isBotMode && nextPicker == 1;
 
-        builder.setMessage(comparisonText + outcomeLine
-                + (cpuContinues ? "\n\nCPU will continue..." : ""));
+        // Works for 2, 3, or 4 players - shows one row per active player.
+        showRoundResultOverlay(result, statLabel, statUnit, cpuContinues);
+    }
 
-        if (cpuContinues) {
-            // CPU's turn continues automatically after a short delay.
-            activeResultDialog = builder.create();
-            activeResultDialog.show();
-            new android.os.Handler(Looper.getMainLooper()).postDelayed(this::advanceToNextRound, 1500);
-            return;
+    // =================================================
+    // ROUND RESULT OVERLAY (2-player case)
+    // =================================================
+
+    /**
+     * Shows the animated round result overlay: a brief "COMPARING..." suspense
+     * beat, then a flip-in reveal of who won and every active player's value,
+     * with matching haptic feedback. Works for 2, 3, or 4 players.
+     */
+    private void showRoundResultOverlay(Game.RoundResult result, String statLabel, String statUnit, boolean cpuContinues) {
+        resultRevealed = false;
+        pendingOverlayContinueAction = null;
+
+        // Reset to the "comparing" state.
+        resultRevealGroup.setVisibility(View.GONE);
+        vsPulseText.setVisibility(View.VISIBLE);
+        vsPulseText.setText("COMPARING...");
+        vsPulseText.setAlpha(1f);
+        vsPulseText.setScaleX(1f);
+        vsPulseText.setScaleY(1f);
+        roundResultOverlay.setVisibility(View.VISIBLE);
+
+        // Gentle pulsing animation while the result is "being compared".
+        pulseAnimator = ObjectAnimator.ofFloat(vsPulseText, "scaleX", 1f, 1.1f, 1f);
+        pulseAnimator.setDuration(500);
+        pulseAnimator.setRepeatCount(ValueAnimator.INFINITE);
+        pulseAnimator.start();
+        ObjectAnimator pulseY = ObjectAnimator.ofFloat(vsPulseText, "scaleY", 1f, 1.1f, 1f);
+        pulseY.setDuration(500);
+        pulseY.setRepeatCount(ValueAnimator.INFINITE);
+        pulseY.start();
+
+        boolean tie = result.isTie();
+        boolean localWon = !tie && result.winnerIndex == localPlayerId;
+
+        // Short suspense delay before revealing the outcome.
+        new android.os.Handler(Looper.getMainLooper()).postDelayed(() ->
+                revealRoundResult(result, tie, localWon, statLabel, statUnit, cpuContinues), 700);
+    }
+
+    /** Reveals the round outcome with a flip-in animation and matching haptic feedback. */
+    private void revealRoundResult(Game.RoundResult result, boolean tie, boolean localWon, String statLabel,
+                                   String statUnit, boolean cpuContinues) {
+        if (pulseAnimator != null) pulseAnimator.cancel();
+        vsPulseText.setVisibility(View.GONE);
+
+        if (tie) {
+            resultBanner.setText("TIE!");
+            resultBanner.setTextColor(0xFFFFD700);
+        } else if (localWon) {
+            resultBanner.setText("YOU WIN!");
+            resultBanner.setTextColor(0xFF4CAF50);
+        } else {
+            resultBanner.setText("YOU LOSE");
+            resultBanner.setTextColor(0xFFFF5555);
         }
 
-        // Human turn result: Show message and wait for user to click "Next".
-        builder.setPositiveButton("NEXT TURN", (dialog, which) -> {
-            if (connection != null && !isBotMode) {
-                connection.sendNextRound();
-            }
-            advanceToNextRound();
-        });
+        resultStatLabel.setText(statLabel.toUpperCase(Locale.getDefault()));
 
-        activeResultDialog = builder.create();
-        activeResultDialog.show();
+        // Build one row per player still active this round - works for any
+        // player count. The winning value(s) are highlighted.
+        resultValuesList.removeAllViews();
+
+        double topValue = Double.NEGATIVE_INFINITY;
+        for (double v : result.statValues) {
+            if (!Double.isNaN(v) && v > topValue) topValue = v;
+        }
+
+        for (int i = 0; i < result.statValues.length; i++) {
+            double value = result.statValues[i];
+            if (Double.isNaN(value)) continue; // that player was already out this round
+
+            String name = (i == localPlayerId) ? "YOU" : (isBotMode && i == 1) ? "CPU" : "PLAYER " + (i + 1);
+            String valueText = formatValue(value) + (statUnit.isEmpty() ? "" : " " + statUnit);
+
+            TextView row = new TextView(this);
+            row.setText(name + ": " + valueText);
+            row.setTextSize(16f);
+            row.setGravity(Gravity.CENTER);
+            row.setPadding(0, 4, 0, 4);
+
+            boolean hasTopValue = (value == topValue);
+            if (tie && hasTopValue) {
+                row.setTextColor(0xFFFFD700); // gold: part of the tie
+            } else if (!tie && hasTopValue) {
+                row.setTextColor(0xFF4CAF50); // green: the round winner
+            } else {
+                row.setTextColor(0xFFFFFFFF);
+            }
+
+            resultValuesList.addView(row);
+        }
+
+        continuePrompt.setText(cpuContinues ? "CPU IS THINKING..." : "TAP TO CONTINUE");
+
+        // Flip-in reveal animation.
+        resultRevealGroup.setRotationY(90f);
+        resultRevealGroup.setAlpha(0f);
+        resultRevealGroup.setVisibility(View.VISIBLE);
+        resultRevealGroup.animate()
+                .rotationY(0f)
+                .alpha(1f)
+                .setDuration(300)
+                .setInterpolator(new AccelerateDecelerateInterpolator())
+                .start();
+
+        resultRevealed = true;
+
+
+
+        if (cpuContinues) {
+            pendingOverlayContinueAction = this::hideOverlayAndAdvance;
+            new android.os.Handler(Looper.getMainLooper()).postDelayed(this::hideOverlayAndAdvance, 1500);
+        } else {
+            pendingOverlayContinueAction = () -> {
+                if (connection != null && !isBotMode) {
+                    connection.sendNextRound();
+                }
+                hideOverlayAndAdvance();
+            };
+        }
     }
+
+    /** Handles a tap anywhere on the result overlay; ignored until the reveal has happened. */
+    private void onResultOverlayTapped() {
+        if (!resultRevealed) return;
+        if (pendingOverlayContinueAction != null) {
+            Runnable action = pendingOverlayContinueAction;
+            pendingOverlayContinueAction = null;
+            action.run();
+        }
+    }
+
+    /** Hides the result overlay and moves on to the next turn. */
+    private void hideOverlayAndAdvance() {
+        if (roundResultOverlay != null) roundResultOverlay.setVisibility(View.GONE);
+        if (resultRevealGroup != null) resultRevealGroup.setVisibility(View.GONE);
+        proceedToNextTurn();
+    }
+
+    // =================================================
+    // COMPARISON TEXT (used for the Game Over summary)
+    // =================================================
 
     /**
      * Builds a readable "who had what" breakdown for the round result dialog,
@@ -298,13 +462,8 @@ public class GameActivity extends AppCompatActivity {
         return sb.toString();
     }
 
-    /**
-     * Dismisses the results dialog and moves to the next card/turn state.
-     */
-    private void advanceToNextRound() {
-        if (activeResultDialog != null && activeResultDialog.isShowing()) {
-            activeResultDialog.dismiss();
-        }
+    /** Refreshes the displayed card and turn state - shared by both result UIs. */
+    private void proceedToNextTurn() {
         displayCurrentCard();
         updateTurnUI();
     }
