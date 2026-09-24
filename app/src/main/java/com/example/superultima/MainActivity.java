@@ -35,7 +35,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         // Enable edge-to-edge display to use the full screen area.
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
         GridLayout decksContainer = findViewById(R.id.decksContainer);

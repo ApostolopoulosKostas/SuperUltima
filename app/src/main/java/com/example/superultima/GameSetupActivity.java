@@ -26,6 +26,9 @@ import com.example.superultima.decksdata.DeckInfo;
 import com.example.superultima.decksdata.DecksRepository;
 import java.util.ArrayList;
 import java.util.List;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 
 /**
  * GameSetupActivity allows the user to configure the game settings before starting.
@@ -85,6 +88,33 @@ public class GameSetupActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_setup);
+        View root = findViewById(android.R.id.content);
+        View bottomActionButtons = findViewById(R.id.bottomActionButtons);
+
+        if (root != null && bottomActionButtons != null) {
+
+            ViewCompat.setOnApplyWindowInsetsListener(root, (v, insets) -> {
+
+                Insets systemBars = insets.getInsets(
+                        WindowInsetsCompat.Type.systemBars()
+                );
+
+                androidx.constraintlayout.widget.ConstraintLayout.LayoutParams
+                        buttonParams =
+                        (androidx.constraintlayout.widget.ConstraintLayout.LayoutParams)
+                                bottomActionButtons.getLayoutParams();
+
+                // Keep CANCEL / START DUEL above the Poco navigation area.
+                buttonParams.bottomMargin = dpToPx(16) + systemBars.bottom;
+
+                bottomActionButtons.setLayoutParams(buttonParams);
+
+                return insets;
+            });
+
+            ViewCompat.requestApplyInsets(root);
+        }
+
 
         // Initialize UI component references
         initializeViews();
@@ -99,6 +129,11 @@ public class GameSetupActivity extends AppCompatActivity {
         updateRoleSelection();
         updateModeSelection();
         updatePlayerCountSelection();
+    }
+    private int dpToPx(int dp) {
+        return Math.round(
+                dp * getResources().getDisplayMetrics().density
+        );
     }
 
     /** Binds UI elements from the layout. */

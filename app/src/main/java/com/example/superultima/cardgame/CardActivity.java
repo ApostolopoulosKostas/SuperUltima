@@ -9,17 +9,21 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
 import android.view.View;
+
 import com.example.superultima.R;
+
 import java.util.List;
+
 import android.content.Intent;
 import android.net.Uri;
 
 
 /**
  * CardActivity is used to browse through a deck of cards.
- * It allows the user to see the details (image, name, stats) of each card
- * by navigating forward and backward through the list.
+ * It allows the user to see the details (image, name, stats)
+ * of each card by navigating forward and backward through the list.
  */
 public class CardActivity extends AppCompatActivity {
 
@@ -41,6 +45,7 @@ public class CardActivity extends AppCompatActivity {
     // The list of cards being browsed and the current index
     private List<CardInfo> cards;
     private int currentCard = 0;
+
     private TextView superUltimaLabel;
     private Button readMoreButton;
 
@@ -49,13 +54,13 @@ public class CardActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        superUltimaLabel = findViewById(R.id.superUltimaLabel);
-
         // Enable edge-to-edge display
         EdgeToEdge.enable(this);
-        setContentView(R.layout.card);
-        superUltimaLabel = findViewById(R.id.superUltimaLabel);
 
+        setContentView(R.layout.card);
+
+        // Initialize Super Ultima label
+        superUltimaLabel = findViewById(R.id.superUltimaLabel);
 
         // Initialize UI component references
         homeButton = findViewById(R.id.homeButton);
@@ -68,7 +73,7 @@ public class CardActivity extends AppCompatActivity {
         cardType = findViewById(R.id.cardType);
         cardImage = findViewById(R.id.cardImage);
 
-        // Bind statistic labels and values (slots 1 to 6)
+        // Bind statistic labels and values
         labels[0] = findViewById(R.id.label1);
         labels[1] = findViewById(R.id.label2);
         labels[2] = findViewById(R.id.label3);
@@ -83,11 +88,15 @@ public class CardActivity extends AppCompatActivity {
         values[4] = findViewById(R.id.value5);
         values[5] = findViewById(R.id.value6);
 
+        // Get the deck
+        cards = (List<CardInfo>) getIntent().getSerializableExtra("deck");
+
         // Home button exits the browser and returns to the previous screen
         homeButton.setOnClickListener(v -> finish());
 
-        cards = (List<CardInfo>) getIntent().getSerializableExtra("deck");
+        // Read More button
         readMoreButton.setOnClickListener(v -> {
+
             String url = "https://en.wikipedia.org/w/index.php?search="
                     + Uri.encode(cards.get(currentCard).name);
 
@@ -95,50 +104,70 @@ public class CardActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        cards = (List<CardInfo>) getIntent().getSerializableExtra("deck");
-
-        // Next button: increments the index and loops back to the start if at the end
+        // Next button
         nextButton.setOnClickListener(v -> {
+
             currentCard++;
+
             if (currentCard >= cards.size()) {
                 currentCard = 0;
             }
+
             showCard(cards.get(currentCard));
         });
 
-        // Previous button: decrements the index and loops to the end if at the start
+        // Previous button
         prevButton.setOnClickListener(v -> {
+
             currentCard--;
+
             if (currentCard < 0) {
                 currentCard = cards.size() - 1;
             }
+
             showCard(cards.get(currentCard));
         });
 
-        // Display the first card initially
+        // Display the first card
         showCard(cards.get(currentCard));
 
-        // Handle window insets to avoid UI overlap with system bars (status/nav bars)
+
+        // ---------------------------------------------------------
+        // Keep the card above the Android navigation / home bar
+        // ---------------------------------------------------------
+
         ViewCompat.setOnApplyWindowInsetsListener(
-                findViewById(R.id.main),
+                findViewById(R.id.cardTemplate),
                 (v, insets) -> {
-                    Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-                    v.setPadding(
-                            systemBars.left,
-                            systemBars.top,
-                            systemBars.right,
-                            systemBars.bottom
+
+                    Insets navigationBar = insets.getInsets(
+                            WindowInsetsCompat.Type.navigationBars()
                     );
+
+                    androidx.constraintlayout.widget.ConstraintLayout.LayoutParams params =
+                            (androidx.constraintlayout.widget.ConstraintLayout.LayoutParams)
+                                    v.getLayoutParams();
+
+                    // Original 16dp margin + Android navigation bar height
+                    params.bottomMargin =
+                            (int) (16 * getResources().getDisplayMetrics().density)
+                                    + navigationBar.bottom;
+
+                    v.setLayoutParams(params);
+
                     return insets;
                 }
         );
     }
 
+
     /**
      * Updates the UI views with the data from the specified card.
+     *
      * @param card The CardInfo object to display.
      */
     private void showCard(CardInfo card) {
+
         // Set basic card metadata
         cardCode.setText(card.code);
         cardName.setText(card.name);
@@ -147,20 +176,24 @@ public class CardActivity extends AppCompatActivity {
         // Load the card's illustration
         cardImage.setImageResource(card.image);
 
-  //Super Ultima label to be shown in Super Ultima Card
 
+        // Super Ultima label
         if (card.superUltima) {
             superUltimaLabel.setVisibility(View.VISIBLE);
         } else {
             superUltimaLabel.setVisibility(View.GONE);
         }
 
-        // Iterate through and display the 6 statistics
+
+        // Display the 6 statistics
         for (int i = 0; i < 6; i++) {
+
             CardInfo.Statistic statistic = card.statistics[i];
+
             if (statistic != null) {
+
                 labels[i].setText(statistic.label);
-                // Format the value to show one decimal place and include the unit
+
                 values[i].setText(
                         String.format(
                                 "%.1f %s",
